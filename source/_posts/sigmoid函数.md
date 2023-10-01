@@ -13,12 +13,14 @@ comments: true
 ---
 [Sigmoid函数](https://baike.baidu.com/item/Sigmoid函数/7981407)是一个在生物学中常见的S型函数，也称为S型生长曲线。在深度学习中，由于其单增以及反函数单增等性质，Sigmoid函数常被用作神经网络的激活函数，将变量映射到[0,1]之间。
 $$
-\mathrm{S}(\mathrm{x})=\frac{1}{1+\mathrm{e}^{-\mathrm{x}}}
+S(x)=\frac{1}{1+e^{-x}}
 $$
 
 Sigmoid函数的导数可以用其自身表示：
 $$
-\mathrm{S}^{\prime}(\mathrm{x})=\frac{\mathrm{e}^{-\mathrm{x}}}{\left(1+\mathrm{e}^{-\mathrm{x}}\right)^2}=\mathrm{S}(\mathrm{x})(1-\mathrm{S}(\mathrm{x}))
+\begin{array}{r}
+S^{\prime}(x)=\frac{e^{-x}}{\left(1+e^{-x}\right)^2}=S(x)(1-S(x)) \\
+\end{array}
 $$
 
 Sigmoid函数的特性与优缺点：
