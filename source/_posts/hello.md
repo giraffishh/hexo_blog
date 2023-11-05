@@ -1,8 +1,10 @@
 ---
 title: hello
+comments: true
+abbrlink: 3610a686
+mermaid: true
 date: 2023-11-04 14:15:05
 updated: 2023-11-04 14:15:05
-comments: true
 ---
 
 

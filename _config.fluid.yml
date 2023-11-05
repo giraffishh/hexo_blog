@@ -427,6 +427,7 @@ footer:
       <span id="times">载入时分秒...</span>
       <script src="/js/duration.js"></script>
     </div>
+    <script src="https://cdn.jsdelivr.net/gh/uiureir/live2d-widget/autoload.js"></script>
   '
 
   # 展示网站的 PV、UV 统计数
