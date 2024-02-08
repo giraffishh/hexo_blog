@@ -6,18 +6,24 @@ date: 2023-11-04 14:15:05
 updated: 2023-11-04 14:15:05
 ---
 
+## ✨简介
 
-## ✨准备工作
+[Hexo](https://hexo.io/zh-cn/)是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他标记语言）解析文章，在几秒内，即可利用靓丽的主题生成静态网页
 
-+ 一个 [github](https://githhub.com)账号
+[Fluid](https://github.com/fluid-dev/hexo-theme-fluid)是基于 Hexo 的一款 Material Design 风格的主题，由 Fluid-dev 负责开发与维护。
+
+## 📌准备工作
+
 + 安装[node.js](https://nodejs.org/en)
 + 安装[git](https://git-scm.com/downloads)
 
 ## 🔧安装博客
 
-### 安装[Hexo](https://hexo.io)
+### 安装Hexo
 
-使用 npm 安装 Hexo[^1]：
+> [Hexo官方文档](https://hexo.io/zh-cn/docs/)
+
+使用 npm 安装 Hexo：
 
 ```sh
 npm install -g hexo-cli
@@ -27,7 +33,7 @@ npm install -g hexo-cli
 使用淘宝镜像加速 `npm config set registry http://registry.npmmirror.com`
 {% endnote %}
 
-安装完成后新建博客：
+安装完成后新建博客项目：
 
 ```sh
 hexo init <folder>
@@ -35,13 +41,15 @@ cd <folder>
 npm install
 ```
 
-### 安装[Fluid主题](https://github.com/fluid-dev/hexo-theme-fluid)
+### 安装Fluid主题
+
+> [Fluid用户手册](https://hexo.fluid-dev.com/docs/)
 
 下载 最新[release 版本](https://github.com/fluid-dev/hexo-theme-fluid/releases)解压到 themes 目录，并将解压出的文件夹重命名为 fluid
 
 然后在博客目录下创建 `_config.fluid.yml`，将主题的 `_config.yml`内容复制过去[^2]
 
-![](https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/post/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99/164229.png)
+![](https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/2023-12-02%20151915.png)
 
 如下修改 Hexo 博客目录中的 `_config.yml`：
 
@@ -92,9 +100,9 @@ hexo new [layout] <title>
 
 > [Fluid配置文档](https://hexo.fluid-dev.com/docs/guide/)
 
-修改Hexo 博客目录下的` _config.yml`"站点配置" 和 `_config.fluid.yml`"主题配置" 以配置博客
+修改博客目录下的` _config.yml`"站点配置" 和 `_config.fluid.yml`"主题配置" 以配置博客
 
-### Slogan(打字机) + [Hitokoto(一言)](https://developer.hitokoto.cn/)
+### 首页Slogan(打字机) + [Hitokoto(一言)](https://developer.hitokoto.cn/)
 
 修改主题配置：
 
@@ -178,7 +186,7 @@ npm install hexo-abbrlink --save
 permalink: post/:abbrlink/
 ```
 
-### 页脚显示网站运行时长[^3]
+### 页脚显示网站运行时长[^1]
 
 在主题配置中的 footer: content 添加：
 
@@ -260,16 +268,19 @@ twikoo评论系统就此部署好啦，可以点击评论窗口的“小齿轮�
 ## 🔗部署至netlify
 
 {% note success %}
-建议使用[Sourcetree](https://sourcetreeapp.com/)管理git仓库
+笔者推荐使用[Sourcetree](https://sourcetreeapp.com/)管理git仓库
 {% endnote %}
 
-在github中新建一个公开仓库，克隆到本地，将博客目录内所有内容移入本地仓库，再推送至远端
+在github中新建一个公开仓库，克隆到本地，将博客目录内所有内容移入本地仓库，再推送至回远端
 然后在netlify中导入该仓库（与部署twikoo同理），就可以通过https://xxx.netlify.app/ 访问网站啦
+
+具体可以参考：
+
++ [博客通过 Netlify 实现持续集成](https://guanqr.com/tech/website/deploy-blog-to-netlify/)
++ [将 Hexo 静态博客部署到 Netlify](https://io-oi.me/tech/deploy-static-site-to-netlify/)
 
 ### Hexo Netlify CMS 在线编辑博客
 
 
 
-[^1]: [Hexo文档](https://hexo.io/zh-cn/docs/)
-[^2]: [Fluid用户手册](https://hexo.fluid-dev.com/docs/)
-[^3]: [Fluid 页脚增加网站运行时长_](https://hexo.fluid-dev.com/posts/fluid-footer-custom/)
+[^1]: [Fluid 页脚增加网站运行时长_](https://hexo.fluid-dev.com/posts/fluid-footer-custom/)
