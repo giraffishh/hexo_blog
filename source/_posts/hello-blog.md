@@ -1,5 +1,5 @@
 ---
-title: 从零开始搭建个人博客网站  (hexo+fluid+netlify+twikoo)
+title: 从零开始搭建个人博客网站  (hexo+fluid+netlify)
 comments: true
 abbrlink: 8810fcc3
 date: 2023-11-04 14:15:05
@@ -49,7 +49,7 @@ npm install
 
 然后在博客目录下创建 `_config.fluid.yml`，将主题的 `_config.yml`内容复制过去[^2]
 
-![](https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/2023-12-02%20151915.png)
+![](https://s1.imagehub.cc/images/2024/06/23/05ee30b28f9e4d6f853ef7c6da01d674.png)
 
 如下修改 Hexo 博客目录中的 `_config.yml`：
 
@@ -102,6 +102,8 @@ hexo new [layout] <title>
 
 修改博客目录下的` _config.yml`"站点配置" 和 `_config.fluid.yml`"主题配置" 以配置博客
 
+***
+
 ### 首页Slogan(打字机) + [Hitokoto(一言)](https://developer.hitokoto.cn/)
 
 修改主题配置：
@@ -141,6 +143,8 @@ index:
 可选择多个分类，例如： ?c=a&c=c
 {% endnote %}
 
+***
+
 ### LaTeX 数学公式
 
 设置主题配置：
@@ -171,6 +175,8 @@ markdown:
 
 安装完成后执行 `hexo clean`
 
+***
+
 ### 文章永久链接 (hexo-abbrlink)
 
 安装hexo-abbrlink：
@@ -186,11 +192,13 @@ npm install hexo-abbrlink --save
 permalink: post/:abbrlink/
 ```
 
+***
+
 ### 页脚显示网站运行时长[^1]
 
-在主题配置中的 footer: content 添加：
+在主题配置的 footer: content 中添加：
 
-```xml
+```yaml
 footer:
   content: '
     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
@@ -242,6 +250,8 @@ footer:
 
 不要忘记把上面注释的时间改为自己的时间，至此这项功能就引入到 <footer> 里了。
 
+***
+
 ### 评论 ([Twikoo](https://twikoo.js.org/))
 
 [先用netlify部署twikoo](https://twikoo.js.org/backend.html#netlify-%E9%83%A8%E7%BD%B2)
@@ -265,22 +275,472 @@ twikoo:
 
 twikoo评论系统就此部署好啦，可以点击评论窗口的“小齿轮”图标，设置管理员密码，进入twikoo管理面板中进行进一步配置和管理
 
-## 🔗部署至netlify
+***
+
+### 看板娘Live2D
+
+#### 1. 旧版本
+
+{% note warning %}
+只支持Cubism 2.1的旧版模型，不建议使用
+{% endnote %}
+
+安装依赖
+
+```sh
+npm install --save hexo-helper-live2d
+```
+
+安装模型
+```sh
+npm install live2d-widget-model-shizuku
+```
+
+模型列表（大部分都很抽象）
+
++ live2d-widget-model-chitose
++ live2d-widget-model-epsilon2_1
++ live2d-widget-model-gf
++ live2d-widget-model-haru
++ live2d-widget-model-haruto
++ live2d-widget-model-hibiki
++ live2d-widget-model-hijiki
++ live2d-widget-model-izumi
++ live2d-widget-model-koharu
++ live2d-widget-model-miku
++ live2d-widget-model-ni-j
++ live2d-widget-model-nico
++ live2d-widget-model-nietzsche
++ live2d-widget-model-nipsilon
++ live2d-widget-model-nito
++ live2d-widget-model-shizuku
++ live2d-widget-model-tororo
++ live2d-widget-model-tsumiki
++ live2d-widget-model-unitychan
++ live2d-widget-model-wanko
++ live2d-widget-model-z16
+
+修改主题配置
+
+```yaml
+live2d:
+  enable: true
+  model:
+    use: shizuku
+  display:
+    position: left
+    width: 150
+    height: 300
+```
+
+#### 2. 新版本（CDN方法）
+
+> 修改自[stevenjoezhang大佬的版本](https://github.com/stevenjoezhang/live2d-widget) [^2][^3][^4][^5]
 
 {% note success %}
-笔者推荐使用[Sourcetree](https://sourcetreeapp.com/)管理git仓库
+支持Cubism 3及以上的版本，可自定义，交互功能丰富
+{% endnote %}
+
+在主题配置的 footer: content 中添加：
+
+```yaml
+footer:
+  content: '
+    <!-- PixiJS -->
+    <script src="https://blog.jsdmirror.com/npm/pixi.js@7.x/dist/pixi.min.js"></script>
+    <script src="https://blog.jsdmirror.com/gh/uiureir/live2d-widget@master/autoload.js"></script>
+  '
+```
+
+> 感谢 https://blog.jsdmirror.com/ 的公益 jsdelivr 国内CDN加速节点
+> jsdelivr官方节点（慢）：`gcore.jsdelivr.net` `testingcf.jsdelivr.net` `quantil.jsdelivr.net`  `fastly.jsdelivr.net` `cdn.jsdelivr.net`
+
+**自定义配置：**
+
+首先将[项目](https://github.com/uiureir/live2d-widget)fork到自己github的仓库中
+
+说明一下几个文件的作用：
+
+| 文件                    | 作用                           |
+| ----------------------- | ------------------------------ |
+| autoload.js             | 自动加载看板娘                 |
+| waifu.css               | 看板娘样式                     |
+| waifu-tips.js           | 看板娘说话的脚本               |
+| waifu-tips.json         | 看板娘说话的内容               |
+| live2d.min.js           | 加载Cubism 2.1的模型的脚本     |
+| live2dcubismcore.min.js | 加载Cubism 3及以上的模型的脚本 |
+
+你可以对照以上文件的查看可选的配置项目。
+
+记得要修改在`autoload.js`的开头中定义的加载看板娘的路径，将其改成自己仓库的路径
+
+```javascript
+const live2d_path = "https://blog.jsdmirror.com/gh/{GitHub用户名}/live2d-widget@master/";
+```
+
+如果要自定义模型，将[模型仓库](https://github.com/uiureir/live2d_api)fork到自己github的仓库中就可以往里面添加自己的Live2D模型了
+
+{% note warning %}
+注意要按照原有模型的目录结构放入新模型
+然后把模型的组织文件（通常是`{模型名}.json`）改成`index.json`才能被正确识别
+{% endnote %}
+
+记得要修改在`autoload.js`的结尾中定义的模型仓库的路径，将其改成自己模型仓库的路径
+
+```javascript
+cdnPath: "https://blog.jsdmirror.com/gh/{GitHub用户名}/live2d_api@master/"
+```
+
+## 📤部署至netlify
+
+{% note success %}
+笔者喜欢使用[Sourcetree](https://sourcetreeapp.com/)管理git仓库
 {% endnote %}
 
 在github中新建一个公开仓库，克隆到本地，将博客目录内所有内容移入本地仓库，再推送至回远端
-然后在netlify中导入该仓库（与部署twikoo同理），就可以通过https://xxx.netlify.app/ 访问网站啦
+然后在netlify中部署该仓库（与部署twikoo同理），就可以通过https://xxx.netlify.app/ 访问网站啦
 
 具体可以参考：
 
 + [博客通过 Netlify 实现持续集成](https://guanqr.com/tech/website/deploy-blog-to-netlify/)
 + [将 Hexo 静态博客部署到 Netlify](https://io-oi.me/tech/deploy-static-site-to-netlify/)
 
-### Hexo Netlify CMS 在线编辑博客
+## ✏️Hexo Netlify CMS 在线编辑博客[^6]
 
+在netlify的`Site configuration`中开启`Identity`
 
+![](https://s1.imagehub.cc/images/2024/06/23/b74e7189bd0b1913c9e7ce3a1df26b1e.png)
+
+下滑找到`Git Gateway`开启
+
+![](https://s1.imagehub.cc/images/2024/06/23/55276baa0882b616e3b263d2fd2892dd.png)
+
+修改博客目录下的` _config.yml`
+
+```yaml
+skip_render: admin/*
+```
+
+在博客项目的`source`文件夹中，创建`admin`文件夹，并新建两个文件`index.html`和`config.yml`于其中
+
+在`index.html`中添加以下内容：
+
+```html
+<!doctype html>
+<html>
+    
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="x-UA-Compatible" content="IE=Edge">
+        <meta name="apple-mobile-web-app-status-bar-style" content="white" />
+        <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+        <title>CMS-在线编辑博客</title>
+    </head>
+    
+    <body>
+        <script defer="true" src="https://cdn.jsdelivr.net/npm/netlify-cms@2/dist/netlify-cms.js"></script>
+    </body>
+
+</html>
+```
+
+在`config.yml`中添加如下内容
+
+```yaml
+backend:
+  # name: test-repo # 测试专用 https://www.netlifycms.org/docs/test-backend/
+  name: git-gateway # https://www.netlifycms.org/docs/git-gateway-backend/
+  branch: main # 要更新的分支(可选；默认为主分支)
+  squash_merges: true # 合并提交
+
+local_backend: true
+
+# This line should *not* be indented
+publish_mode: editorial_workflow
+
+# This line should *not* be indented
+media_folder: "source/images/uploads" # 媒体文件将存储在图片/上载下的Repo中。
+public_folder: "/images/uploads" # 上传的媒体的src属性将以/images/uploads开头。
+
+locale: "zh_Hans" # 语言环境 https://github.com/netlify/netlify-cms/tree/master/packages/netlify-cms-locales/src
+
+collections:      # https://www.netlifycms.org/docs/configuration-options/#collections
+  - name: "posts" # 在路由中使用，例如：/admin/collections/blog。
+    label: "Post" # 在用户界面中使用
+    folder: "source/_posts" # 存储文件的文件夹的路径。
+    create: true # 允许用户在这个集合中创建新的文件。
+    fields: # 每份文件的字段，通常是前面的内容。
+      - {label: "顶部图", name: "banner_img", widget: "image", required: false} 
+      - {label: "文章封面", name: "index_img", widget: "image", required: false} 
+      - {label: "文章排序", name: "sticky", widget: "number", required: false, hint: "数值越大，该文章越靠前"}
+      - {label: "标题", name: "title", widget: "string" }
+      - {label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD HH:mm:ss", dateFormat: "YYYY-MM-DD", timeFormat: "HH:mm:ss", required: false}
+      - {label: "更新日期", name: "updated", widget: "datetime", format: "YYYY-MM-DD HH:mm:ss", dateFormat: "YYYY-MM-DD", timeFormat: "HH:mm:ss", required: false}
+      - {label: "标签", name: "tags", widget: "list", required: false}
+      - {label: "分类", name: "categories", widget: "list", required: false}
+      - {label: "关键词", name: "keywords", widget: "list", required: false}
+      - {label: "摘要", name: "excerpt", widget: "string", required: false}
+      - {label: "永久链接", name: "permalink", widget: "string", required: false}
+      - {label: "评论", name: "comments", widget: "boolean", default: true, required: false}
+      - {label: "内容", name: "body", widget: "markdown", required: false}
+
+  - name: "pages"
+    label: "Pages"
+    files:
+      - file: "source/about/index.md"
+        name: "about"
+        label: "关于"
+        fields:
+          - {label: "标题", name: "title", widget: "string"}
+          - {label: "内容", name: "body", widget: "markdown", required: false}
+          - {label: "评论", name: "comments", widget: "boolean", default: true, required: false}
+
+# 如切换主题，请删除以下选项或自行配置，默认仅配置了fluid主题
+  - name: "settings"
+    label: "settings"
+    files:      
+      - file: "source/_data/fluid_config.yml"
+        name: "fluid"
+        label: "fluid主题配置"
+        editor:
+          preview: false      # 是否开启编辑预览
+        fields:
+          - label: "导航栏"
+            name: "navbar"
+            widget: "object"
+            collapsed: true   # 是否折叠显示
+            fields:
+              - {label: "博客名", name: "blog_title", widget: "string", required: false}
+              - {label: "毛玻璃特效", name: "ground_glass", widget: "boolean", default: true, required: false}
+          - label: "首页"
+            name: "index"
+            widget: "object"
+            collapsed: true   # 是否折叠显示
+            fields:
+              - label: "顶部图"
+                name: "banner_img"
+                widget: "image"
+                default: "/img/default.png"
+              - label: "高度"
+                name: "banner_img_height"
+                widget: "number"
+              - label: "副标题"
+                name: "slogan"
+                widget: "object"
+                fields:
+                  - {label: "修改副标题", name: "text", widget: "string", required: false}
+          - label: "文章页"
+            name: "post"
+            widget: "object"
+            collapsed: true
+            fields:
+              - label: "顶部图(默认)"
+                name: "banner_img"
+                widget: "image"
+                default: "/img/default.png"
+              - label: "高度"
+                name: "banner_img_height"
+                widget: "number" 
+              - label: "文章封面图(默认)"
+                name: "default_index_img"
+                widget: "image"
+          - label: "归档页"
+            name: "archive"
+            widget: "object"
+            collapsed: true
+            fields:
+              - label: "顶部图"
+                name: "banner_img"
+                widget: "image"
+                default: "/img/default.png"
+              - label: "高度"
+                name: "banner_img_height"
+                widget: "number"
+              - label: "副标题"
+                name: "subtitle"
+                widget: "string"
+                required: false  
+          - label: "分类页"
+            name: "category"
+            widget: "object"
+            collapsed: true
+            fields:
+              - label: "顶部图"
+                name: "banner_img"
+                widget: "image"
+                default: "/img/default.png"
+              - label: "高度"
+                name: "banner_img_height"
+                widget: "number"
+              - label: "副标题"
+                name: "subtitle"
+                widget: "string"
+                required: false
+          - label: "标签页"
+            name: "tag"
+            widget: "object"
+            collapsed: true
+            fields:
+              - label: "顶部图"
+                name: "banner_img"
+                widget: "image"
+                default: "/img/default.png"
+              - label: "高度"
+                name: "banner_img_height"
+                widget: "number"
+              - label: "副标题"
+                name: "subtitle"
+                widget: "string"
+                required: false
+          - label: "关于页"
+            name: "about"
+            widget: "object"
+            collapsed: true
+            fields:
+              - label: "顶部图"
+                name: "banner_img"
+                widget: "image"
+                default: "/img/default.png"
+              - label: "高度"
+                name: "banner_img_height"
+                widget: "number"
+              - label: "副标题"
+                name: "subtitle"
+                widget: "string"
+                required: false
+              - label: "作者头像"
+                name: "avatar"
+                widget: "image"
+              - label: "博客名称"
+                name: "name"
+                widget: "string"
+              - label: "网站描述"
+                name: "intro"
+                widget: "string"
+          - label: "友链页面"
+            name: "links"
+            widget: "object"
+            collapsed: true
+            fields:
+              - label: "顶部图"
+                name: "banner_img"
+                widget: "image"
+                default: "/img/default.png"
+              - label: "高度"
+                name: "banner_img_height"
+                widget: "number"
+              - label: "副标题"
+                name: "subtitle"
+                widget: "string"
+                required: false
+              - label: "添加友链"
+                name: "items"
+                widget: "list"
+                fields:
+                  - {label: "网站名称", name: "title", widget: "string", required: true}
+                  - {label: "网址描述", name: "intro", widget: "string", required: false}
+                  - {label: "网站地址", name: "link", widget: "string", required: true}
+                  - {label: "网站头像", name: "avatar", widget: "image", required: true}
+```
+
+创建`source\_data\fluid_config.yml`，修改并添加以下内容：
+
+```yaml
+navbar:
+  blog_title: 博客标题
+  ground_glass:
+    enable: true
+index:
+  banner_img: #背景图
+  banner_img_height: 100
+  slogan:
+    text: 标语
+post:
+  banner_img: #文章页图
+  banner_img_height: 85
+  default_index_img: #文章封面图
+archive:
+  banner_img: #归档页图url
+  banner_img_height: 80
+  subtitle: null
+category:
+  banner_img: #分类页图url
+  banner_img_height: 80
+  subtitle: null
+tag:
+  banner_img: #标签页图url
+  banner_img_height: 80
+  subtitle: null
+about:
+  banner_img: #关于页图url
+  banner_img_height: 80
+  subtitle: null
+  avatar: #头像url
+  name: 用户名
+  intro: 介绍下自己
+links:
+  banner_img: /images/uploads/1616421416500-wallhaven-rddv31.jpg
+  banner_img_height: 80
+  subtitle: null
+  items:
+    - title: Fluid Repo
+      intro: 主题 GitHub 仓库
+      link: https://github.com/fluid-dev/hexo-theme-fluid
+      avatar: /img/favicon.png
+```
+
+可以在主题配置中修改导航栏的菜单，添加或删去`admin`的按钮
+
+```yaml
+navbar:
+  menu:
+    - { key: 'Admin', link: '/admin/', icon: "iconfont icon-pen" }
+```
+
+打开部署好的博客网站，进入CMS，注册一个账号
+
+![](https://s1.imagehub.cc/images/2024/06/23/dfd97245da24e5eacaa9770af9fbf61a.png)
+
+然后回到netlify的`Site configuration` > `Identity` 中将`Registration preferences`修改为`Invite only`关闭注册通道
+
+至此`Netlify CMS`配置就算完成了，只要推送代码，等待片刻，通过你部署在 Netlify 上的域名，加`/admin/`即可访问你的博客后台。
+
+## 🖼️图床
+
+通过将图片存储在图床中，通过直链访问，而非直接放在博客中，来提高网站的加载速度，并使网站中的图片更易于管理
+
++ 国内免费的图床推荐[imagehub](www.imagehub.cc)
++ 国外免费的图床推荐[SM.MS](https://smms.app)
+
+{% note warning %}
+免费的图床稳定性未知，有删图的风险，且加载速度一般
+{% endnote %}
+
+如需要保证稳定和加载速度，可以选择使用各大平台的对象储存，成本也没多少：
+
++ [阿里云OSS](https://oss.console.aliyun.com/)
++ [腾讯COS](https://cloud.tencent.com/product/cos)
++ [七牛云Kodo](https://www.qiniu.com/products/kodo)
+
+## 🛠️PWA - 渐进式网页应用[^7]
+
+### 渐进式
+
+什么是渐进式，即将传统的web应用，应用现代的技术和方法使之在能够有桌面应用一般的体验，即为渐进式web应用。渐进式web应用可以同时运行在传统的浏览器上，像普通的网站一样进行浏览和操作；其同时也可以运行在现代功能完善的浏览器中，可以使其具备更多的效果和功能。比较常见的有可安装，即在支持的浏览器和操作系统上可以生成访问图标，通过图标可以可桌面应用一样访问应用；消息推送，即访问应用时服务器端可以通过应用的后台进程主动向客户端推送消息，类似于桌面应用的消息队列。
+
+### 可离线
+
+支持应用离线访问，即正常访问应用时，后台进程会自动缓存内容，下次访问时应用优先从缓存区读取数据，然后是进行web请求。因此可离线实质上充当了web代理服务器的职责，先是将正常请求代理到缓存区，再是将缓存区不足的文件进行正常的网络请求，通过此方法实现了离线的目标。根据可离线的规律，应用在一次访问缓存之后二次访问即可断网。
+
+### 安装步骤
+
+首先要实现PWA的可安装性，需要有一个清单文件`manifest.json`。`manifest.json`是一个简单的`json`文件，它描述了我们的图标在主屏幕上如何显示，以及图标点击进去的启动页是什么，自动生成`manifest.json`的工具：[manifest.json生成工具](https://app-manifest.firebaseapp.com/)，本站的JSON格式如下所示：
 
 [^1]: [Fluid 页脚增加网站运行时长_](https://hexo.fluid-dev.com/posts/fluid-footer-custom/)
+[^2]: [网页添加 Live2D 看板娘](https://www.fghrsh.net/post/123.html)
+[^3]: [PR: Migrate to pixi-live2d-display](https://github.com/stevenjoezhang/live2d-widget/pull/82)
+[^4]: [live2d-widget 添加 moc3 模型支持](https://qianxu.run/2023/11/25/live2d-widget-moc3/)
+[^5]: [pixi-live2d-display](https://github.com/guansss/pixi-live2d-display/blob/master/README.zh.md)
+[^6]: [Hexo Netlify CMS 在线编辑博客](https://hexo.fluid-dev.com/posts/hexo-netlify/)
+[^7]: [给 Hexo 博客添加 PWA 支持_](https://www.eatrice.cn/post/%E7%BB%99hexo%E5%8D%9A%E5%AE%A2%E6%B7%BB%E5%8A%A0PWA%E6%94%AF%E6%8C%81/)

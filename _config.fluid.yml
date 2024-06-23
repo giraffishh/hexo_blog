@@ -429,7 +429,7 @@ footer:
     </div>
     <!-- PixiJS -->
     <script src="https://fastly.jsdelivr.net/npm/pixi.js@7.x/dist/pixi.min.js"></script>
-    <script src="https://fastly.jsdelivr.net/gh/uiureir/live2d-widget@v3.0/autoload.js"></script>
+    <script src="https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/live2d-widget/autoload.js"></script>
   '
 
   # 展示网站的 PV、UV 统计数
@@ -710,7 +710,7 @@ post:
     enable: true
     # 脚注的节标题，也可以在 front-matter 中通过 `footnote: <h2>Reference</h2>` 这种形式修改单独页面的 header
     # The section title of the footnote, you can also modify the header of a single page in the form of `footnote: <h2>Reference</h2>` in front-matter
-    header: '<h2>参考</h2>'
+    header: '<h2>🔗参考</h2>'
 
   # 数学公式，开启之前需要更换 Markdown 渲染器，否则复杂公式会有兼容问题，具体请见：https://hexo.fluid-dev.com/docs/guide/##latex-数学公式
   # Mathematical formula. If enable, you need to change the Markdown renderer, see: https://hexo.fluid-dev.com/docs/en/guide/#math
@@ -870,7 +870,7 @@ remark42:
 # Based on Tencent CloudBase
 # See: https://twikoo.js.org
 twikoo:
-  envId: https://twikoo-uiureir.netlify.app/.netlify/functions/twikoo
+  envId: https://twikoo-giraffish.netlify.app/.netlify/functions/twikoo
   #region: ap-shanghai
   path: window.location.pathname
 

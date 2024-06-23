@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Uiureir' blog
+title: Giraffish' blog
 subtitle: ''
 description: '卖柠檬雪糕的鱼的博客'
 keywords:
@@ -13,7 +13,7 @@ timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://uiureir.netlify.app
+url: https://giraffish.netlify.app
 #permalink: :year/:month/:day/:title/
 permalink: post/:abbrlink/
 permalink_defaults:
@@ -180,3 +180,17 @@ image_minifier:
   pngquant: false
   progressive: false
   silent: true
+# offline config passed to sw-precache.
+service_worker:
+  maximumFileSizeToCacheInBytes: 5242880
+  staticFileGlobs:
+  - public/index.html
+  - public/img/fluid.png
+  - public/manifest.json
+  stripPrefix: public
+  verbose: false
+  runtimeCaching:
+    - urlPattern: /**/*
+      handler: cacheFirst
+      options:
+        origin: giraffish.netlify.app
