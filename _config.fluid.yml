@@ -430,6 +430,18 @@ footer:
     <!-- PixiJS -->
     <script src="https://fastly.jsdelivr.net/npm/pixi.js@7.x/dist/pixi.min.js"></script>
     <script src="https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/live2d-widget/autoload.js"></script>
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker
+          .register("./js/serviceWorker.js")
+          .then(res => console.log("service worker registered"))
+          .catch(err => console.log("service worker not registered", err));
+      })
+    }
+    </script>
   '
 
   # 展示网站的 PV、UV 统计数
