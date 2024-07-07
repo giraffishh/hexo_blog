@@ -180,17 +180,3 @@ image_minifier:
   pngquant: false
   progressive: false
   silent: true
-# offline config passed to sw-precache.
-service_worker:
-  maximumFileSizeToCacheInBytes: 5242880
-  staticFileGlobs:
-  - public/index.html
-  - public/img/fluid.png
-  - public/manifest.json
-  stripPrefix: public
-  verbose: false
-  runtimeCaching:
-    - urlPattern: /**/*
-      handler: cacheFirst
-      options:
-        origin: giraffish.netlify.app

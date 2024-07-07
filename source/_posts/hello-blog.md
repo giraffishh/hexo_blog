@@ -1,5 +1,5 @@
 ---
-title: 从零开始搭建个人博客网站  (hexo+fluid+netlify)
+title: 从零开始搭建个人博客网站  (hexo-fluid+netlify+cloudflare)
 comments: true
 abbrlink: 8810fcc3
 date: 2023-11-04 14:15:05
@@ -11,6 +11,10 @@ updated: 2023-11-04 14:15:05
 [Hexo](https://hexo.io/zh-cn/)是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他标记语言）解析文章，在几秒内，即可利用靓丽的主题生成静态网页
 
 [Fluid](https://github.com/fluid-dev/hexo-theme-fluid)是基于 Hexo 的一款 Material Design 风格的主题，由 Fluid-dev 负责开发与维护。
+
+[netlify](https://www.netlify.com/)是一个提供托管服务的平台，免费额度充足，速度较快且易于上手
+
+[Cloudflare](https://www.cloudflare-cn.com/)是国外著名的CDN供应商，可以提供免费的DNS服务和SSL证书，用来加速和保护网站
 
 ## 📌准备工作
 
@@ -99,10 +103,7 @@ hexo new [layout] <title>
 ## 🎨博客配置
 
 > [Fluid配置文档](https://hexo.fluid-dev.com/docs/guide/)
-
-修改博客目录下的` _config.yml`"站点配置" 和 `_config.fluid.yml`"主题配置" 以配置博客
-
-***
+> 修改博客目录下的` _config.yml`"站点配置" 和 `_config.fluid.yml`"主题配置" 以配置博客
 
 ### 首页Slogan(打字机) + [Hitokoto(一言)](https://developer.hitokoto.cn/)
 
@@ -398,12 +399,54 @@ cdnPath: "https://blog.jsdmirror.com/gh/{GitHub用户名}/live2d_api@master/"
 {% endnote %}
 
 在github中新建一个公开仓库，克隆到本地，将博客目录内所有内容移入本地仓库，再推送至回远端
-然后在netlify中部署该仓库（与部署twikoo同理），就可以通过https://xxx.netlify.app/ 访问网站啦
+然后在netlify中部署该仓库（与部署twikoo同理）
 
 具体可以参考：
 
 + [博客通过 Netlify 实现持续集成](https://guanqr.com/tech/website/deploy-blog-to-netlify/)
 + [将 Hexo 静态博客部署到 Netlify](https://io-oi.me/tech/deploy-static-site-to-netlify/)
+
+## 🔗设置域名
+
+### 免费域名
+
+在`netlify`的`Domain management`中可以设置一个系统分配的二级域名`xxx.netlify.app`
+
+### 私人域名
+
+可以在阿里云、腾讯云等域名注册商购买域名，笔者以阿里云为例
+
+#### 使用阿里云DNS解析域名
+
+> 阿里云提供了免费版的域名解析服务，但不包括SSL证书，访问时浏览器会提示网站不安全
+
+购买后在域名解析处，添加以下记录（笔者另加了`blog.xxx.xxx`的二级域名），指向`Netlify`分配的二级域名
+
+![0d37b84a644204bbd13b018383ed7866.jpeg](https://s1.imagehub.cc/images/2024/07/07/0d37b84a644204bbd13b018383ed7866.jpeg)
+
+#### 使用 Cloudflare DNS 解析域名
+
+在阿里云域名 > 管理 > DNS修改 更改DNS服务器（名称服务器）为`Cloudflare`提供的名称服务器
+
+![ddc950191db2e3ab68a02c309d7c653f.jpeg](https://s1.imagehub.cc/images/2024/07/07/ddc950191db2e3ab68a02c309d7c653f.jpeg)
+
+在[Cloudflare](https://www.cloudflare-cn.com/)中添加购买的域名
+
+![c87c74bc59a6c96cb7bcf28114ef3e76.jpeg](https://s1.imagehub.cc/images/2024/07/07/c87c74bc59a6c96cb7bcf28114ef3e76.jpeg)
+
+添加`DNS`记录（笔者另加了`blog.xxx.xxx`的二级域名），指向`Netlify`分配的二级域名
+
+![be9615705bfa14b60895251bdfbfcc8d.jpeg](https://s1.imagehub.cc/images/2024/07/07/be9615705bfa14b60895251bdfbfcc8d.jpeg)
+
+> 在`名称`中填入`@`即解析主域名
+> Cloudflare的其他能开的功能就看着开吧，反正免费
+
+***
+
+最后在`netlify`的`Domain management`添加购买的域名
+
+![d800729b8092dfad88a094338a825c5b.jpeg](https://s1.imagehub.cc/images/2024/07/07/d800729b8092dfad88a094338a825c5b.jpeg)
+
 
 ## ✏️Hexo Netlify CMS 在线编辑博客[^6]
 
@@ -722,6 +765,13 @@ navbar:
 + [阿里云OSS](https://oss.console.aliyun.com/)
 + [腾讯COS](https://cloud.tencent.com/product/cos)
 + [七牛云Kodo](https://www.qiniu.com/products/kodo)
++ [又拍云USS](https://www.upyun.com/products/file-storage)
++ [多吉云OSS](https://www.dogecloud.com/product/oss)
+
+{% note warning %}
+七牛云\又拍云\多吉云都有免费的下行流量额度，但均需绑定ICP备案的域名
+{% endnote %}
+
 
 ## 🛠️PWA - 渐进式网页应用[^7]
 
@@ -735,7 +785,7 @@ navbar:
 
 ### 安装步骤
 
-首先要实现PWA的可安装性，需要有一个清单文件`manifest.json`。`manifest.json`是一个简单的`json`文件，它描述了我们的图标在主屏幕上如何显示，以及图标点击进去的启动页是什么，自动生成`manifest.json`的工具：[manifest.json生成工具](https://app-manifest.firebaseapp.com/)（国内好像用不了），本站的JSON格式如下所示：
+首先要实现PWA的可安装性，需要有一个清单文件`manifest.json`。`manifest.json`是一个简单的`json`文件，它描述了我们的图标在主屏幕上如何显示，以及图标点击进去的启动页是什么，自动生成`manifest.json`的工具：[manifest.json生成工具](https://app-manifest.firebaseapp.com/)（好像崩了），本站的JSON格式如下所示：
 
 ```json
 {
@@ -797,11 +847,7 @@ navbar:
 + `theme_color` 会设置主题颜色
 + `display` 设置启动样式
 
-安装`hexo-service-worker`插件：
-
-```sh
-npm install --save hexo-service-worker
-```
+> 本来笔者想直接使用插件hexo-offline或hexo-pwa或hexo-service-worker来实现PWA的，结果均年久失修，出现各种各样的问题，所以放弃了，选择比较原始的方法
 
 [^1]: [Fluid 页脚增加网站运行时长_](https://hexo.fluid-dev.com/posts/fluid-footer-custom/)
 [^2]: [网页添加 Live2D 看板娘](https://www.fghrsh.net/post/123.html)
