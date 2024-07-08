@@ -5,7 +5,6 @@ const cacheFiles = [
   "/",
   "/index.html",
   "/manifest.json",
-  '/css/main.css',
 ];
  
 /**
