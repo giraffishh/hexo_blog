@@ -1,9 +1,9 @@
 ---
-title: 从零开始搭建个人博客网站  (hexo-fluid+netlify+cloudflare)
+title: 从零开始搭建个人博客网站(hexo-fluid+netlify+cloudflare)
 comments: true
 abbrlink: 8810fcc3
 date: 2023-11-04 14:15:05
-updated: 2023-11-04 14:15:05
+updated: 2024-7-08 14:15:05
 ---
 
 ## ✨简介
@@ -406,7 +406,7 @@ cdnPath: "https://blog.jsdmirror.com/gh/{GitHub用户名}/live2d_api@master/"
 + [博客通过 Netlify 实现持续集成](https://guanqr.com/tech/website/deploy-blog-to-netlify/)
 + [将 Hexo 静态博客部署到 Netlify](https://io-oi.me/tech/deploy-static-site-to-netlify/)
 
-## 🔗设置域名
+## 📍设置域名
 
 ### 免费域名
 
@@ -704,22 +704,22 @@ post:
   banner_img_height: 85
   default_index_img: #文章封面图
 archive:
-  banner_img: #归档页图url
+  banner_img: #归档页图
   banner_img_height: 80
   subtitle: null
 category:
-  banner_img: #分类页图url
+  banner_img: #分类页图
   banner_img_height: 80
   subtitle: null
 tag:
-  banner_img: #标签页图url
+  banner_img: #标签页图
   banner_img_height: 80
   subtitle: null
 about:
-  banner_img: #关于页图url
+  banner_img: #关于页图
   banner_img_height: 80
   subtitle: null
-  avatar: #头像url
+  avatar: #头像
   name: 用户名
   intro: 介绍下自己
 links:
@@ -732,6 +732,12 @@ links:
       link: https://github.com/fluid-dev/hexo-theme-fluid
       avatar: /img/favicon.png
 ```
+
+各个页面的背景图可以在里面修改，可以是图片的直链，也可以是本地图片的相对路径（以`/img/`开头）
+
+{% note warning %}
+本地图片应放置在博客目录中`/source/img/`里面，图片过大会严重拖慢页面加载
+{% endnote %}
 
 可以在主题配置中修改导航栏的菜单，添加或删去`admin`的按钮
 
@@ -774,6 +780,8 @@ navbar:
 
 
 ## 🛠️PWA - 渐进式网页应用[^7]
+
+> 本来笔者想直接使用插件hexo-offline或hexo-pwa或hexo-service-worker来实现PWA的，结果均年久失修，出现各种各样的问题，所以放弃了，选择比较原始的方法
 
 ### 渐进式
 
@@ -838,16 +846,106 @@ navbar:
       "type": "image/png"
     }
   ],
-  "splash_pages": null
 }
 ```
+
 + `start_url` 可以设置启动网址
 + `icons` 可以设置各个分辨率下页面的图标，适配不同的尺寸的路径
 + `background_color` 会设置背景颜色， Chrome 在网络应用启动后会立即使用此颜色，这一颜色将保留在屏幕上，直至网络应用首次呈现为止。
 + `theme_color` 会设置主题颜色
 + `display` 设置启动样式
 
-> 本来笔者想直接使用插件hexo-offline或hexo-pwa或hexo-service-worker来实现PWA的，结果均年久失修，出现各种各样的问题，所以放弃了，选择比较原始的方法
+然后在博客目录下新建文件夹`scripts`，再在里面新建一个`pwa.js`文件，并添加以下内容，从而通过Hexo注入器将`manifest.json`引入`<head>`中并检查浏览器是否能注册`serviceWorker`
+
+```javascript
+hexo.extend.injector.register('head_begin', '<link rel="manifest" href="/manifest.json">', 'default');
+hexo.extend.injector.register('head_begin', '<script>if("serviceWorker"in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/serviceWorker.js").then(res=>console.log("service worker registered")).catch(err=>console.log("service worker not registered",err))})}</script>', 'default');
+```
+
+在`source`目录下新建`serviceWorker.js`，添加以下内容
+
+```javascript
+const cacheName = "blog-cache-v1";
+
+// 初始缓存的关键静态文件
+const initialCacheFiles = [
+  "/",
+  "/index.html",
+  "/manifest.json"
+];
+
+/**
+ * 安装 Service Worker
+ */
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(cacheName).then(cache => {
+      return Promise.all(
+        initialCacheFiles.map(file => {
+          return cache.add(file).catch(error => {
+            console.error(`Failed to cache ${file}:`, error);
+          });
+        })
+      );
+    })
+  );
+});
+
+/**
+ * 激活 Service Worker
+ */
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.map(key => {
+          if (key !== cacheName) {
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
+});
+
+/**
+ * 拦截网络请求并动态缓存
+ */
+self.addEventListener("fetch", event => {
+  console.log(`Fetching: ${event.request.url}`); // 调试信息
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      if (response) {
+        console.log(`Found in cache: ${event.request.url}`);
+        return response;
+      }
+
+      return fetch(event.request).then(networkResponse => {
+        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+          console.log(`Network request failed for: ${event.request.url}`);
+          return networkResponse;
+        }
+
+        let responseToCache = networkResponse.clone();
+        caches.open(cacheName).then(cache => {
+          cache.put(event.request, responseToCache).catch(error => {
+            console.error(`Failed to cache ${event.request.url}:`, error);
+          });
+        });
+
+        return networkResponse;
+      }).catch(error => {
+        console.error(`Fetching failed for ${event.request.url}:`, error);
+        throw error;
+      });
+    })
+  );
+});
+```
+
+> 该代码由ChatGPT-4o经调教后写成，存在潜在问题，能跑就行
+
+然后在`https`连接下就能支持PWA啦
 
 [^1]: [Fluid 页脚增加网站运行时长_](https://hexo.fluid-dev.com/posts/fluid-footer-custom/)
 [^2]: [网页添加 Live2D 看板娘](https://www.fghrsh.net/post/123.html)

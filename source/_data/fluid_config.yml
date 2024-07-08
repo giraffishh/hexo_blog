@@ -3,28 +3,28 @@ navbar:
   ground_glass:
     enable: true
 index:
-  banner_img: https://s1.imagehub.cc/images/2023/09/28/IMG_2537.jpeg
+  banner_img: https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/IMG_2537.jpg
   banner_img_height: 100
   slogan:
     text: 卖柠檬雪糕的鱼的博客
 post:
-  banner_img: https://s1.imagehub.cc/images/2023/09/28/IMG_2542.jpeg
+  banner_img: https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/IMG_2542.jpg
   banner_img_height: 85
   default_index_img: https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/A84CE283-6EDF-41A8-B75F-65F94D4C8DE9.jpeg
 archive:
-  banner_img: https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/IMG_2597.JPG
-  banner_img_height: 80
+  banner_img: https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/city-moon-ocean-digital-art-4k.jpg
+  banner_img_height: 85
   subtitle: null
 category:
-  banner_img: https://s1.imagehub.cc/images/2023/09/28/IMG_2538.jpeg
+  banner_img: https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/IMG_2538.jpg
   banner_img_height: 80
   subtitle: null
 tag:
-  banner_img: https://s1.imagehub.cc/images/2023/09/28/IMG_2543.jpeg
+  banner_img: https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/IMG_2543.jpg
   banner_img_height: 80
   subtitle: null
 about:
-  banner_img: https://s1.imagehub.cc/images/2023/09/28/IMG_2535.jpeg
+  banner_img: https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/IMG_2535.jpg
   banner_img_height: 80
   subtitle: null
   avatar: https://s1.imagehub.cc/images/2023/10/01/IMG_2539.jpeg
