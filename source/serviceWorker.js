@@ -39,6 +39,7 @@ self.addEventListener("activate", event => {
       );
     })
   );
+  self.clients.claim(); // 激活后立即接管控制
 });
 
 /**
