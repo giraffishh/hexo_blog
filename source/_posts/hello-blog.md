@@ -115,7 +115,7 @@ index:
     enable: true
     text: 这是一条 Slogan
     api:
-      enable: false
+      enable: true
       url: "https://v1.hitokoto.cn/?c=d"
       method: "GET"
       headers: {}
@@ -889,6 +889,7 @@ self.addEventListener("install", event => {
       );
     })
   );
+  self.skipWaiting(); // 立即接管控制
 });
 
 /**
@@ -906,6 +907,7 @@ self.addEventListener("activate", event => {
       );
     })
   );
+  self.clients.claim(); // 激活后立即接管控制
 });
 
 /**
