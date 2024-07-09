@@ -13,13 +13,9 @@ const initialCacheFiles = [
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(cacheName).then(cache => {
-      return Promise.all(
-        initialCacheFiles.map(file => {
-          return cache.add(file).catch(error => {
-            console.error(`Failed to cache ${file}:`, error);
-          });
-        })
-      );
+      return cache.addAll(initialCacheFiles).catch(error => {
+        console.error(`Failed to cache initial files:`, error);
+      });
     })
   );
   self.skipWaiting(); // 立即接管控制
@@ -47,32 +43,22 @@ self.addEventListener("activate", event => {
  * 拦截网络请求并动态缓存
  */
 self.addEventListener("fetch", event => {
-  console.log(`Fetching: ${event.request.url}`); // 调试信息
   event.respondWith(
-    caches.match(event.request).then(response => {
-      if (response) {
-        console.log(`Found in cache: ${event.request.url}`);
-        return response;
-      }
-
-      return fetch(event.request).then(networkResponse => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-          console.log(`Network request failed for: ${event.request.url}`);
-          return networkResponse;
-        }
-
-        let responseToCache = networkResponse.clone();
-        caches.open(cacheName).then(cache => {
-          cache.put(event.request, responseToCache).catch(error => {
-            console.error(`Failed to cache ${event.request.url}:`, error);
+    caches.match(event.request).then(cachedResponse => {
+      const fetchPromise = fetch(event.request).then(networkResponse => {
+        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+          const responseToCache = networkResponse.clone();
+          caches.open(cacheName).then(cache => {
+            cache.put(event.request, responseToCache).catch(error => {
+              console.error(`Failed to cache ${event.request.url}:`, error);
+            });
           });
-        });
-
+        }
         return networkResponse;
-      }).catch(error => {
-        console.error(`Fetching failed for ${event.request.url}:`, error);
-        throw error;
       });
+
+      // 返回缓存的响应（如果有），同时进行网络请求更新缓存
+      return cachedResponse || fetchPromise;
     })
   );
 });
