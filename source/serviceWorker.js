@@ -22,6 +22,7 @@ self.addEventListener("install", event => {
       );
     })
   );
+  self.skipWaiting(); // 立即接管控制
 });
 
 /**
@@ -39,6 +40,7 @@ self.addEventListener("activate", event => {
       );
     })
   );
+  self.clients.claim(); // 激活后立即接管控制
 });
 
 /**
