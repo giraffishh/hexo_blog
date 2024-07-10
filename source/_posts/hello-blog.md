@@ -761,8 +761,13 @@ navbar:
 
 通过将图片存储在图床中，通过直链访问，而非直接放在博客中，来提高网站的加载速度，并使网站中的图片更易于管理
 
+<<<<<<< Updated upstream
 * 国内免费的图床推荐[imagehub](www.imagehub.cc)
 * 国外免费的图床推荐[SM.MS](https://smms.app)
+=======
++ 国内免费的图床如[imagehub](www.imagehub.cc)
++ 国外免费的图床如[SM.MS](https://smms.app)
+>>>>>>> Stashed changes
 
 {% note warning %}
 免费的图床稳定性未知，有删图的风险，且加载速度一般
@@ -782,7 +787,7 @@ navbar:
 
 ## 🛠️PWA - 渐进式网页应用[^7]
 
-> 本来笔者想直接使用插件hexo-offline或hexo-pwa或hexo-service-worker来实现PWA的，结果均年久失修，出现各种各样的问题，所以放弃了，选择比较原始的方法，在跟ChatCPT交流了俩天后，得出了还算可以的方案
+> 本来笔者想直接使用插件hexo-offline或hexo-pwa或hexo-service-worker来实现PWA的，结果均年久失修，出现各种各样的问题，所以放弃了，选择比较原始的方法，但本人是js小白，在跟人工智障交流了俩天后，得出了还算可以的方案
 
 ### 渐进式
 
