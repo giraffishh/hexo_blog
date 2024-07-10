@@ -781,7 +781,7 @@ navbar:
 
 ## 🛠️PWA - 渐进式网页应用[^7]
 
-> 本来笔者想直接使用插件hexo-offline或hexo-pwa或hexo-service-worker来实现PWA的，结果均年久失修，出现各种各样的问题，所以放弃了，选择比较原始的方法
+> 本来笔者想直接使用插件hexo-offline或hexo-pwa或hexo-service-worker来实现PWA的，结果均年久失修，出现各种各样的问题，所以放弃了，选择比较原始的方法，在跟ChatCPT交流了俩天后，得出了还算可以的方案
 
 ### 渐进式
 
@@ -791,7 +791,7 @@ navbar:
 
 支持应用离线访问，即正常访问应用时，后台进程会自动缓存内容，下次访问时应用优先从缓存区读取数据，然后是进行web请求。因此可离线实质上充当了web代理服务器的职责，先是将正常请求代理到缓存区，再是将缓存区不足的文件进行正常的网络请求，通过此方法实现了离线的目标。根据可离线的规律，应用在一次访问缓存之后二次访问即可断网。
 
-### 安装步骤
+### 步骤
 
 首先要实现PWA的可安装性，需要有一个清单文件`manifest.json`。`manifest.json`是一个简单的`json`文件，它描述了我们的图标在主屏幕上如何显示，以及图标点击进去的启动页是什么，自动生成`manifest.json`的工具：[manifest.json生成工具](https://app-manifest.firebaseapp.com/)（好像崩了），本站的JSON格式如下所示：
 
@@ -855,19 +855,70 @@ navbar:
 + `theme_color` 会设置主题颜色
 + `display` 设置启动样式
 
-然后在博客目录下新建文件夹`scripts`，再在里面新建一个`pwa.js`文件，并添加以下内容，从而通过Hexo注入器将`manifest.json`引入`<head>`中并检查浏览器是否能注册`serviceWorker`
+然后在博客目录下新建文件夹`scripts`，再在里面新建一个`pwa.js`文件，并添加以下内容，从而通过Hexo注入器将`manifest.json`引入`<head>`中并注册`serviceWorker`，检查是否有新版本
 
 ```javascript
 hexo.extend.injector.register('head_begin', '<link rel="manifest" href="/manifest.json">', 'default');
-hexo.extend.injector.register('head_begin', '<script>if("serviceWorker"in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/serviceWorker.js").then(res=>console.log("service worker registered")).catch(err=>console.log("service worker not registered",err))})}</script>', 'default');
+hexo.extend.injector.register(
+  'head_begin',
+  `<script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/serviceWorker.js').then(registration => {
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                if (confirm('New content is available; please refresh.')) {
+                  window.location.reload();
+                }
+              }
+            });
+          });
+        });
+      });
+    }
+  </script>`,
+  'default'
+);
 ```
 
-在`source`目录下新建`serviceWorker.js`，添加以下内容
+在`scripts` 文件夹创建一个 `serviceWorker.js` ，这个脚本将在`hexo g`构建过程通过`after_generate`钩子来自动生成带有缓存版本号的 `serviceWorker.js` 
 
 ```javascript
-const cacheName = "blog-cache-v1";
+hexo.extend.filter.register('after_generate', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const swTemplatePath = path.join(hexo.base_dir, 'source', 'serviceWorker-template.js');
+  const swOutputDir = hexo.public_dir;
+  const swOutputPath = path.join(swOutputDir, 'serviceWorker.js');
 
-// 初始缓存的关键静态文件
+  // Generate a unique version number
+  const version = new Date().getTime();
+
+  // Read the template file content
+  let swContent = fs.readFileSync(swTemplatePath, 'utf8');
+
+  // Replace the placeholder with the actual version number
+  swContent = swContent.replace('__CACHE_VERSION__', `v${version}`);
+
+  // Ensure the public directory exists
+  if (!fs.existsSync(swOutputDir)){
+    fs.mkdirSync(swOutputDir, { recursive: true });
+  }
+
+  // Write the final serviceWorker.js file
+  fs.writeFileSync(swOutputPath, swContent);
+});
+```
+
+在`source`目录下新建`serviceWorker-template.js`，这是`serviceWorker.js`的模板文件
+
+```javascript
+const cacheVersion = '__CACHE_VERSION__'; // This will be replaced by the build script
+const cacheName = `blog-cache-${cacheVersion}`;
+
+// Initial cache files
 const initialCacheFiles = [
   "/",
   "/index.html",
@@ -875,25 +926,19 @@ const initialCacheFiles = [
 ];
 
 /**
- * 安装 Service Worker
+ * Install Service Worker
  */
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(cacheName).then(cache => {
-      return Promise.all(
-        initialCacheFiles.map(file => {
-          return cache.add(file).catch(error => {
-            console.error(`Failed to cache ${file}:`, error);
-          });
-        })
-      );
+      return cache.addAll(initialCacheFiles);
     })
   );
-  self.skipWaiting(); // 立即接管控制
+  self.skipWaiting(); // Immediately take control
 });
 
 /**
- * 激活 Service Worker
+ * Activate Service Worker
  */
 self.addEventListener("activate", event => {
   event.waitUntil(
@@ -905,49 +950,38 @@ self.addEventListener("activate", event => {
           }
         })
       );
+    }).then(() => {
+      self.clients.claim(); // Immediately take control
     })
   );
-  self.clients.claim(); // 激活后立即接管控制
 });
 
 /**
- * 拦截网络请求并动态缓存
+ * Fetch request and cache first strategy
  */
 self.addEventListener("fetch", event => {
-  console.log(`Fetching: ${event.request.url}`); // 调试信息
   event.respondWith(
-    caches.match(event.request).then(response => {
-      if (response) {
-        console.log(`Found in cache: ${event.request.url}`);
-        return response;
+    caches.match(event.request).then(cachedResponse => {
+      if (cachedResponse) {
+        return cachedResponse;
       }
-
       return fetch(event.request).then(networkResponse => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-          console.log(`Network request failed for: ${event.request.url}`);
-          return networkResponse;
-        }
-
-        let responseToCache = networkResponse.clone();
-        caches.open(cacheName).then(cache => {
-          cache.put(event.request, responseToCache).catch(error => {
-            console.error(`Failed to cache ${event.request.url}:`, error);
+        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+          const responseToCache = networkResponse.clone();
+          caches.open(cacheName).then(cache => {
+            cache.put(event.request, responseToCache);
           });
-        });
-
+        }
         return networkResponse;
-      }).catch(error => {
-        console.error(`Fetching failed for ${event.request.url}:`, error);
-        throw error;
       });
     })
   );
 });
 ```
 
-> 该代码由ChatGPT-4o经调教后写成，存在潜在问题，能跑就行
+通过这种方式，使用缓存名称来确定缓存是否是最新的。如果缓存名称发生变化，则说明有新的版本， Service Worker会自动删除旧的缓存版本并激活新的缓存。这样可以确保用户每次刷新页面时都能获取到最新的内容。如果没有新版，就优先使用缓存的数据，以减少多余的网络请求
 
-然后在`https`连接下就能支持PWA啦
+在`https`连接下就能支持PWA啦
 
 [^1]: [Fluid 页脚增加网站运行时长_](https://hexo.fluid-dev.com/posts/fluid-footer-custom/)
 [^2]: [网页添加 Live2D 看板娘](https://www.fghrsh.net/post/123.html)
