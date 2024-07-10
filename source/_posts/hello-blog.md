@@ -1,9 +1,9 @@
 ---
 title: 从零开始搭建个人博客网站(hexo-fluid+netlify+cloudflare)
-updated: 2024-07-09 11:41:16
+date: 2023-11-04 14:15:05
+updated: 2024-07-10 14:35:36
 comments: true
 abbrlink: 8810fcc3
-date: 2023-11-04 14:15:05
 ---
 
 ## ✨简介
@@ -439,7 +439,11 @@ cdnPath: "https://blog.jsdmirror.com/gh/{GitHub用户名}/live2d_api@master/"
 ![be9615705bfa14b60895251bdfbfcc8d.jpeg](https://s1.imagehub.cc/images/2024/07/07/be9615705bfa14b60895251bdfbfcc8d.jpeg)
 
 > 在`名称`中填入`@`即解析主域名
-> Cloudflare的其他能开的功能就看着开吧，反正免费
+
+{% note warning %}
+如果你的网站页面在加载的时候，进度条在最后卡住，尝试关闭Cloudflare的Rocket Loader™功能
+其他功能能开的就看着开吧，反正免费
+{% endnote %}
 
 ***
 
