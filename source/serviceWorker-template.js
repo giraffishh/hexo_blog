@@ -43,6 +43,13 @@ self.addEventListener("activate", event => {
  * Fetch request and cache first strategy
  */
 self.addEventListener("fetch", event => {
+  const url = new URL(event.request.url);
+
+  // Ignore requests to /admin/ and /.netlify/
+  if (url.pathname.startsWith('/admin/') || url.pathname.startsWith('/.netlify/')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       if (cachedResponse) {
