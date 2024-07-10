@@ -5,7 +5,6 @@ updated: 2024-07-10 14:35:36
 comments: true
 abbrlink: 8810fcc3
 ---
-
 ## ✨简介
 
 [Hexo](https://hexo.io/zh-cn/)是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他标记语言）解析文章，在几秒内，即可利用靓丽的主题生成静态网页
@@ -18,8 +17,8 @@ abbrlink: 8810fcc3
 
 ## 📌准备工作
 
-+ 安装[node.js](https://nodejs.org/en)
-+ 安装[git](https://git-scm.com/downloads)
+* 安装[node.js](https://nodejs.org/en)
+* 安装[git](https://git-scm.com/downloads)
 
 ## 🔧安装博客
 
@@ -99,11 +98,10 @@ hexo new [layout] <title>
 #而您自定义的其他布局和 post 相同，都将储存到 source/_posts 文件夹
 ```
 
-
 ## 🎨博客配置
 
 > [Fluid配置文档](https://hexo.fluid-dev.com/docs/guide/)
-> 修改博客目录下的` _config.yml`"站点配置" 和 `_config.fluid.yml`"主题配置" 以配置博客
+> 修改博客目录下的`_config.yml`"站点配置" 和 `_config.fluid.yml`"主题配置" 以配置博客
 
 ### 首页Slogan(打字机) + [Hitokoto(一言)](https://developer.hitokoto.cn/)
 
@@ -124,27 +122,27 @@ index:
 
 `url`: 一言的请求接口，参数c为句子类型见下表
 
-| 参数   | 说明             |
-| :----- | :--------------- |
-| a      | 动画             |
-| b      | 漫画             |
-| c      | 游戏             |
-| d      | 文学             |
-| e      | 原创             |
-| f      | 来自网络         |
-| g      | 其他             |
-| h      | 影视             |
-| i      | 诗词             |
-| j      | 网易云           |
-| k      | 哲学             |
-| l      | 抖机灵           |
+| 参数  | 说明        |
+| --- | --------- |
+| a   | 动画        |
+| b   | 漫画        |
+| c   | 游戏        |
+| d   | 文学        |
+| e   | 原创        |
+| f   | 来自网络      |
+| g   | 其他        |
+| h   | 影视        |
+| i   | 诗词        |
+| j   | 网易云       |
+| k   | 哲学        |
+| l   | 抖机灵       |
 | 其他值 | 作为 动画 类处理 |
 
 {% note success %}
 可选择多个分类，例如： ?c=a&c=c
 {% endnote %}
 
-***
+- - -
 
 ### LaTeX 数学公式
 
@@ -176,7 +174,7 @@ markdown:
 
 安装完成后执行 `hexo clean`
 
-***
+- - -
 
 ### 文章永久链接 (hexo-abbrlink)
 
@@ -193,7 +191,7 @@ npm install hexo-abbrlink --save
 permalink: post/:abbrlink/
 ```
 
-***
+- - -
 
 ### 页脚显示网站运行时长[^1]
 
@@ -251,7 +249,7 @@ footer:
 
 不要忘记把上面注释的时间改为自己的时间，至此这项功能就引入到 <footer> 里了。
 
-***
+- - -
 
 ### 评论 ([Twikoo](https://twikoo.js.org/))
 
@@ -276,7 +274,7 @@ twikoo:
 
 twikoo评论系统就此部署好啦，可以点击评论窗口的“小齿轮”图标，设置管理员密码，进入twikoo管理面板中进行进一步配置和管理
 
-***
+- - -
 
 ### 看板娘Live2D
 
@@ -293,33 +291,34 @@ npm install --save hexo-helper-live2d
 ```
 
 安装模型
+
 ```sh
 npm install live2d-widget-model-shizuku
 ```
 
 模型列表（大部分都很抽象）
 
-+ live2d-widget-model-chitose
-+ live2d-widget-model-epsilon2_1
-+ live2d-widget-model-gf
-+ live2d-widget-model-haru
-+ live2d-widget-model-haruto
-+ live2d-widget-model-hibiki
-+ live2d-widget-model-hijiki
-+ live2d-widget-model-izumi
-+ live2d-widget-model-koharu
-+ live2d-widget-model-miku
-+ live2d-widget-model-ni-j
-+ live2d-widget-model-nico
-+ live2d-widget-model-nietzsche
-+ live2d-widget-model-nipsilon
-+ live2d-widget-model-nito
-+ live2d-widget-model-shizuku
-+ live2d-widget-model-tororo
-+ live2d-widget-model-tsumiki
-+ live2d-widget-model-unitychan
-+ live2d-widget-model-wanko
-+ live2d-widget-model-z16
+* live2d-widget-model-chitose
+* live2d-widget-model-epsilon2_1
+* live2d-widget-model-gf
+* live2d-widget-model-haru
+* live2d-widget-model-haruto
+* live2d-widget-model-hibiki
+* live2d-widget-model-hijiki
+* live2d-widget-model-izumi
+* live2d-widget-model-koharu
+* live2d-widget-model-miku
+* live2d-widget-model-ni-j
+* live2d-widget-model-nico
+* live2d-widget-model-nietzsche
+* live2d-widget-model-nipsilon
+* live2d-widget-model-nito
+* live2d-widget-model-shizuku
+* live2d-widget-model-tororo
+* live2d-widget-model-tsumiki
+* live2d-widget-model-unitychan
+* live2d-widget-model-wanko
+* live2d-widget-model-z16
 
 修改主题配置
 
@@ -336,7 +335,7 @@ live2d:
 
 #### 2. 新版本（CDN方法）
 
-> 修改自[stevenjoezhang大佬的版本](https://github.com/stevenjoezhang/live2d-widget) [^2][^3][^4][^5]
+> 修改自[stevenjoezhang大佬的版本](https://github.com/stevenjoezhang/live2d-widget) [^2]
 
 {% note success %}
 支持Cubism 3及以上的版本，可自定义，交互功能丰富
@@ -362,13 +361,13 @@ footer:
 
 说明一下几个文件的作用：
 
-| 文件                    | 作用                           |
-| ----------------------- | ------------------------------ |
-| autoload.js             | 自动加载看板娘                 |
-| waifu.css               | 看板娘样式                     |
-| waifu-tips.js           | 看板娘说话的脚本               |
-| waifu-tips.json         | 看板娘说话的内容               |
-| live2d.min.js           | 加载Cubism 2.1的模型的脚本     |
+| 文件                      | 作用                  |
+| ----------------------- | ------------------- |
+| autoload.js             | 自动加载看板娘             |
+| waifu.css               | 看板娘样式               |
+| waifu-tips.js           | 看板娘说话的脚本            |
+| waifu-tips.json         | 看板娘说话的内容            |
+| live2d.min.js           | 加载Cubism 2.1的模型的脚本  |
 | live2dcubismcore.min.js | 加载Cubism 3及以上的模型的脚本 |
 
 你可以对照以上文件的查看可选的配置项目。
@@ -403,8 +402,8 @@ cdnPath: "https://blog.jsdmirror.com/gh/{GitHub用户名}/live2d_api@master/"
 
 具体可以参考：
 
-+ [博客通过 Netlify 实现持续集成](https://guanqr.com/tech/website/deploy-blog-to-netlify/)
-+ [将 Hexo 静态博客部署到 Netlify](https://io-oi.me/tech/deploy-static-site-to-netlify/)
+* [博客通过 Netlify 实现持续集成](https://guanqr.com/tech/website/deploy-blog-to-netlify/)
+* [将 Hexo 静态博客部署到 Netlify](https://io-oi.me/tech/deploy-static-site-to-netlify/)
 
 ## 📍设置域名
 
@@ -445,12 +444,11 @@ cdnPath: "https://blog.jsdmirror.com/gh/{GitHub用户名}/live2d_api@master/"
 其他功能能开的就看着开吧，反正免费
 {% endnote %}
 
-***
+- - -
 
 最后在`netlify`的`Domain management`添加购买的域名
 
 ![d800729b8092dfad88a094338a825c5b.jpeg](https://s1.imagehub.cc/images/2024/07/07/d800729b8092dfad88a094338a825c5b.jpeg)
-
 
 ## ✏️Hexo Netlify CMS 在线编辑博客[^6]
 
@@ -462,7 +460,7 @@ cdnPath: "https://blog.jsdmirror.com/gh/{GitHub用户名}/live2d_api@master/"
 
 ![](https://s1.imagehub.cc/images/2024/06/23/55276baa0882b616e3b263d2fd2892dd.png)
 
-修改博客目录下的` _config.yml`
+修改博客目录下的`_config.yml`
 
 ```yaml
 skip_render: admin/*
@@ -763,8 +761,8 @@ navbar:
 
 通过将图片存储在图床中，通过直链访问，而非直接放在博客中，来提高网站的加载速度，并使网站中的图片更易于管理
 
-+ 国内免费的图床推荐[imagehub](www.imagehub.cc)
-+ 国外免费的图床推荐[SM.MS](https://smms.app)
+* 国内免费的图床推荐[imagehub](www.imagehub.cc)
+* 国外免费的图床推荐[SM.MS](https://smms.app)
 
 {% note warning %}
 免费的图床稳定性未知，有删图的风险，且加载速度一般
@@ -772,16 +770,15 @@ navbar:
 
 如需要保证稳定和加载速度，可以选择使用各大平台的对象储存，成本也没多少：
 
-+ [阿里云OSS](https://oss.console.aliyun.com/)
-+ [腾讯COS](https://cloud.tencent.com/product/cos)
-+ [七牛云Kodo](https://www.qiniu.com/products/kodo)
-+ [又拍云USS](https://www.upyun.com/products/file-storage)
-+ [多吉云OSS](https://www.dogecloud.com/product/oss)
+* [阿里云OSS](https://oss.console.aliyun.com/)
+* [腾讯COS](https://cloud.tencent.com/product/cos)
+* [七牛云Kodo](https://www.qiniu.com/products/kodo)
+* [又拍云USS](https://www.upyun.com/products/file-storage)
+* [多吉云OSS](https://www.dogecloud.com/product/oss)
 
 {% note warning %}
 七牛云\又拍云\多吉云都有免费的下行流量额度，但均需绑定ICP备案的域名
 {% endnote %}
-
 
 ## 🛠️PWA - 渐进式网页应用[^7]
 
@@ -853,11 +850,11 @@ navbar:
 }
 ```
 
-+ `start_url` 可以设置启动网址
-+ `icons` 可以设置各个分辨率下页面的图标，适配不同的尺寸的路径
-+ `background_color` 会设置背景颜色， Chrome 在网络应用启动后会立即使用此颜色，这一颜色将保留在屏幕上，直至网络应用首次呈现为止。
-+ `theme_color` 会设置主题颜色
-+ `display` 设置启动样式
+* `start_url` 可以设置启动网址
+* `icons` 可以设置各个分辨率下页面的图标，适配不同的尺寸的路径
+* `background_color` 会设置背景颜色， Chrome 在网络应用启动后会立即使用此颜色，这一颜色将保留在屏幕上，直至网络应用首次呈现为止。
+* `theme_color` 会设置主题颜色
+* `display` 设置启动样式
 
 然后在博客目录下新建文件夹`scripts`，再在里面新建一个`pwa.js`文件，并添加以下内容，从而通过Hexo注入器将`manifest.json`引入`<head>`中并注册`serviceWorker`，检查是否有新版本
 
@@ -867,20 +864,24 @@ hexo.extend.injector.register(
   'head_begin',
   `<script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/serviceWorker.js').then(registration => {
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                if (confirm('New content is available; please refresh.')) {
-                  window.location.reload();
+	  if (!location.pathname.startsWith('/admin')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/serviceWorker.js').then(registration => {
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  if (confirm('New content is available; please refresh.')) {
+                    window.location.reload();
+                  }
                 }
-              }
+              });
             });
           });
         });
-      });
+	    } else {
+        console.log('Service Worker is not registered on /admin path.');
+      }
     }
   </script>`,
   'default'
@@ -964,6 +965,13 @@ self.addEventListener("activate", event => {
  * Fetch request and cache first strategy
  */
 self.addEventListener("fetch", event => {
+  const url = new URL(event.request.url);
+
+  // Ignore requests to /admin/ and /.netlify/
+  if (url.pathname.startsWith('/admin/') || url.pathname.startsWith('/.netlify/')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       if (cachedResponse) {
@@ -985,7 +993,7 @@ self.addEventListener("fetch", event => {
 
 通过这种方式，使用缓存名称来确定缓存是否是最新的。如果缓存名称发生变化，则说明有新的版本， Service Worker会自动删除旧的缓存版本并激活新的缓存。这样可以确保用户每次刷新页面时都能获取到最新的内容。如果没有新版，就优先使用缓存的数据，以减少多余的网络请求
 
-在`https`连接下就能支持PWA啦
+在`https`连接下就能支持PWA啦，可以离线访问访问过的网站啦
 
 [^1]: [Fluid 页脚增加网站运行时长_](https://hexo.fluid-dev.com/posts/fluid-footer-custom/)
 [^2]: [网页添加 Live2D 看板娘](https://www.fghrsh.net/post/123.html)
