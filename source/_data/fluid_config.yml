@@ -1,12 +1,12 @@
 navbar:
-  blog_title: 卖柠檬雪糕的鱼的博客
+  blog_title: Giraffish's blog
   ground_glass:
     enable: true
 index:
   banner_img: https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/IMG_2537.jpg
   banner_img_height: 100
   slogan:
-    text: 卖柠檬雪糕的鱼的博客
+    text: 欢迎阅读Giraffish的博客
 post:
   banner_img: https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/IMG_2542.jpg
   banner_img_height: 85
@@ -27,9 +27,9 @@ about:
   banner_img: https://hexo-blog-netlify.oss-cn-shenzhen.aliyuncs.com/IMG_2535.jpg
   banner_img_height: 80
   subtitle: null
-  avatar: https://s1.imagehub.cc/images/2023/10/01/IMG_2539.jpeg
-  name: 卖柠檬雪糕的鱼
-  intro: 卖柠檬雪糕的鱼的个人博客
+  avatar: /images/uploads/8548a93a70264f5c9a2945c6dd85a4ca.jpeg
+  name: Giraffish
+  intro: 卖柠檬雪糕的鱼
 links:
   banner_img: /images/uploads/1616421416500-wallhaven-rddv31.jpg
   banner_img_height: 80
