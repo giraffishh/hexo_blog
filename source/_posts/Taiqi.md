@@ -3,7 +3,7 @@ title: Taiqi Lang 学习笔记 基础篇
 date: 2024-08-01 14:15:05
 updated: 2024-08-04 16:29:44
 comments: true
-index_img: https://s1.imagehub.cc/images/2024/08/04/30d1064c062d92f89a3b08dd59b6f686.png
+index_img: https://s1.imagehub.cc/images/2024/08/04/e558265eb0ef6d44d0a5fbd769169f78.jpg
 ---
 ## Taiqi简介
 
