@@ -44,6 +44,8 @@ Taichi 和 Python 的语法相似，但它们并不完全相同。为了区分 T
 + Taichi 内核`@ti.kernel`是 Taichi 运行时接管任务的入口点，它们必须由 Python 代码直接调用，不允许从另一个内核内部或从 Taichi 函数内部调用内核
 + Taichi 函数`@ti.func`是内核的构建块，只能由另一个 Taichi 函数或内核调用
 
+> Taiqi内核和Taiqi函数在编译的时候会捕获Python作用于中的全局变量，并将其绑定作为**常量**传递至Taiqi作用域，而不会感知其值的变化
+
 {% note warning %}
 从原生 Python 代码（Python 作用域）中调用 Taichi 函数会导致 Taichi 引发语法错误
 {% endnote %}
