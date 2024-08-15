@@ -1,7 +1,7 @@
 ---
 title: Taiqi Lang 学习笔记 基础篇
 date: 2024-08-01 14:15:05
-updated: 2024-08-04 16:29:44
+updated: 2024-08-15 16:29:44
 comments: true
 index_img: https://s1.imagehub.cc/images/2024/08/04/e558265eb0ef6d44d0a5fbd769169f78.jpg
 ---
@@ -208,8 +208,9 @@ def test():
     print(length(v))
 ```
 
-{% note successful%}
+{% note success%}
 对于四维以下的向量，可以使用`xyzw`或`rgba`来访问向量的内容
+
 ```python
 v = ti.Vector([1, 2, 3, 4])
 v.x = 1   # v[0] = 1
@@ -217,7 +218,9 @@ v.y = 2   # v[1] = 2
 v.z = 3   # v[2] = 3
 v.w = 4   # v[3] = 4
 v.xyz = 1, 2, 3
+v.rgb = 1, 2, 3
 ```
+
 {% endnote %}
 
 #### 结构体类型和数据类（dataclass）
@@ -339,10 +342,100 @@ particle = ti.types.struct(
 particle_field = particle.field(shape=(10,))
 ```
 
-### 访问元素
+### 操作
 
 使用索引运算符`[]` 来访问 field 中的一个元素
 
+```python
+f_2d = ti.field(ti.f32, shape=(4, 4))
 
+@ti.kernel
+def loop_over_2d():
+  for i, j in f_2d:
+      f_2d[i, j] = i*10 + j
 
+loop_over_2d()
+# [[ 0,  1,  2,  3],
+# [10, 11, 12, 13],
+# [20, 21, 22, 23],
+# [30, 31, 32, 33]]
+```
 
+{% note warning %}
+当访问一个零维 field 中的元素时，将 `[None]` 作为索引，而非`[0]`
+
+```python
+f_0d = ti.field(ti.f32, shape=())
+f_0d[None] = 10.0
+
+f_1d = ti.field(ti.f32, shape=(1, ))
+f_1d[0] = 10.0
+```
+{% endnote %}
+
+{% note warning %}
+Taiqi field 不支持切片，会抛出错误'Slicing is not supported on ti.field'
+
+```python
+f_2d[0][3:] = [4, 5, 6]  # Error! You tried to access a slice of the first row, but it is not supported
+for x in f_2d[0]:  # Error! You tried to access its first row，but it is not supported
+    ...
+```
+{% endnote %}
+
+* 使用`ti.grouped()`将多维场索引打包成向量（一般与`for`循环连用）
+
+```python
+sf_3d = ti.field(dtype=ti.f32, shape=(4, 4, 4))
+for I in ti.grouped(sf_3d):
+    sf_3d[I] = I.x + I.y + I.z  #  I 是一个3D向量，由元素的三维索引组成
+```
+
+* 使用`field.fill()`填充标量field的元素
+
+```python
+x = ti.field(int, shape=(5, 5))
+x.fill(1)  # Sets all elements in x to 1
+```
+
+* 访问向量field的元素的组件
+
+```python
+vf_2d = ti.Vector.field(n=3, dtype=float, shape=(4, 4))
+vf_2d[0, 0][0] = 1  # 第一行第一列的向量的第一个分量为1
+vf_2d[0, 1].xyz = 1, 2, 3
+```
+
+* 访问矩阵field的元素的组件
+
+```python
+mf_3d = ti.Matrix.field(n=3, m=2, dtype=ti.f32, shape=(300, 400, 500))
+mf_3d[3, 4][0, 1] = 1  # 第三行第四列的矩阵的第一行第二列的值为1
+```
+
+* 访问结构体field的元素的组件
+
+```python
+particle_field = ti.Struct.field({
+    "pos": ti.math.vec3,
+    "vel": ti.math.vec3,
+    "acc": ti.math.vec3,
+    "mass": float,
+  }, shape=(10,))
+
+# 索引优先
+particle_field[0].pos = vec3(0) # particle_field is a 1D struct field, pos is a 3D vector
+
+# 名称优先（创建一个子 field，集合该结构体 field 中所有 `mass` 成员，再用索引操作符 `[]` 访问特定成员）
+particle_field.mass[0] = 1.0  # Sets the mass of the first particle in the field to 1.0
+particle_field.mass.fill(1.0)  # Sets all mass of the particles in the struct field to 1.0
+```
+
+* 访问field的元数据
+
+```python
+f_1d.shape  # (1,)
+f_1d.dtype  # f32
+
+# 也可以同理访问field在声明时的其他参数
+```
