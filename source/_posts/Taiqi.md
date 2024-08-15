@@ -374,7 +374,7 @@ f_1d[0] = 10.0
 {% endnote %}
 
 {% note warning %}
-Taiqi field 不支持切片，会抛出错误'Slicing is not supported on ti.field'
+Taiqi field 不支持切片，会抛出错误`Slicing is not supported on ti.field`
 
 ```python
 f_2d[0][3:] = [4, 5, 6]  # Error! You tried to access a slice of the first row, but it is not supported
