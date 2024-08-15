@@ -1,7 +1,7 @@
 ---
 title: Taiqi Lang 学习笔记 基础篇
 date: 2024-08-01 14:15:05
-updated: 2024-08-15 16:29:44
+updated: 2024-08-04 16:29:44
 comments: true
 index_img: https://s1.imagehub.cc/images/2024/08/04/e558265eb0ef6d44d0a5fbd769169f78.jpg
 ---
@@ -208,6 +208,18 @@ def test():
     print(length(v))
 ```
 
+{% note successful%}
+对于四维以下的向量，可以使用`xyzw`或`rgba`来访问向量的内容
+```python
+v = ti.Vector([1, 2, 3, 4])
+v.x = 1   # v[0] = 1
+v.y = 2   # v[1] = 2
+v.z = 3   # v[2] = 3
+v.w = 4   # v[3] = 4
+v.xyz = 1, 2, 3
+```
+{% endnote %}
+
 #### 结构体类型和数据类（dataclass）
 
 使用函数`ti.types.struct()`创建结构类型
@@ -326,5 +338,11 @@ particle = ti.types.struct(
 )
 particle_field = particle.field(shape=(10,))
 ```
+
+### 访问元素
+
+使用索引运算符`[]` 来访问 field 中的一个元素
+
+
 
 
