@@ -1,7 +1,7 @@
 ---
 title: Taiqi Lang 学习笔记 基础篇
 date: 2024-08-01 14:15:05
-updated: 2024-08-04 16:29:44
+updated: 2024-08-15 16:29:44
 comments: true
 index_img: https://s1.imagehub.cc/images/2024/08/04/e558265eb0ef6d44d0a5fbd769169f78.jpg
 ---
@@ -201,7 +201,7 @@ v = myvec4d(1, 2, 3, 4)  # Create a vector instance, here v = [1.0 2.0 3.0 4.0]
 
 @ti.func
 def length(w: vec4d):  # vec4d as type hint
-    return w.norm()
+    return w.norm()  #计算向量的欧几里得范数（L2范数）
 
 @ti.kernel
 def test():
@@ -259,7 +259,7 @@ ray = Ray()
 
 #### 类型转换
 
-目前支持类型转换的复合数据类型只有向量和矩阵。 在对向量或矩阵进行类型转换时，是以元素为单位进行的，结果是创建新的向量和矩阵
+目前支持类型转换的复合数据类型只有向量和矩阵。 在对向量或矩阵进行类型转换时，是以**元素为单位**进行的，结果是创建新的向量和矩阵
 
 ```python
 @ti.kernel
@@ -268,4 +268,63 @@ def foo():
     v = int(u)               # ti.Vector([2, 4])
     w = ti.cast(u, ti.i32)  # ti.Vector([2, 4])
 ```
+
+## 数据容器 Field
+
+Taichi field 是**全局**数据容器，从Python作用域或Taichi作用域均能访问，其元素可以是标量、向量、矩阵和结构体
+
+{% note warning %}
+Taichi field 支持的维度最高是8D
+{% endnote %}
+
+### 声明
+
+* 标量field
+
+```python
+sf_0d = ti.field(ti.f32, shape=())  # 声明一个零维标量场，只含一个标量
+sf_1d = ti.field(ti.i32, shape=9)   # 声明一个一维标量场，形状设置成 n 或 (n,)
+#sf_1d = ti.field(ti.i32, shape=(9, ))
+sf_2d = ti.field(int, shape=(3, 6))  # 声明一个二维标量场，含3x6个标量
+```
+
+* 向量field
+
+```python
+# 声明一个4x4的二维向量场，每个元素都是3D向量
+vf_2d = ti.Vector.field(n=3, dtype=float, shape=(4, 4))
+```
+
+* 矩阵field
+
+```python
+# Declares a 300x400x500 matrix field, each of its elements being a 3x2 matrix
+mf_3d = ti.Matrix.field(n=3, m=2, dtype=ti.f32, shape=(300, 400, 500))
+```
+
+{% note warning %}
+出于性能考虑，建议您将矩阵保持在最小水平
+不推荐： `ti.Matrix.field(64, 32, dtype=ti.f32, shape=(3, 2))`
+推荐： `ti.Matrix.field(3, 2, dtype=ti.f32, shape=(64, 32))`
+{% endnote %}
+
+* 结构体field
+
+```python
+# Declares a 1D struct field using the ti.Struct.field() method
+particle_field = ti.Struct.field({
+    "pos": ti.math.vec3,
+    "vel": ti.math.vec3,
+    "acc": ti.math.vec3,
+    "mass": float,
+  }, shape=(10,))
+
+# 也可以先声明一个结构体，再由此构建结构体field
+vec3 = ti.math.vec3  # vec3 is a built-in vector type suppied in the `taichi.math` module
+particle = ti.types.struct(
+  pos=vec3, vel=vec3, acc=vec3, mass=float,
+)
+particle_field = particle.field(shape=(10,))
+```
+
 
