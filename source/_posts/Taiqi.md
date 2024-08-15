@@ -210,6 +210,7 @@ def test():
 
 {% note success%}
 对于四维以下的向量，可以使用`xyzw`或`rgba`来访问向量的内容
+{% endnote %}
 
 ```python
 v = ti.Vector([1, 2, 3, 4])
@@ -220,8 +221,6 @@ v.w = 4   # v[3] = 4
 v.xyz = 1, 2, 3
 v.rgb = 1, 2, 3
 ```
-
-{% endnote %}
 
 #### 结构体类型和数据类（dataclass）
 
@@ -363,6 +362,7 @@ loop_over_2d()
 
 {% note warning %}
 当访问一个零维 field 中的元素时，将 `[None]` 作为索引，而非`[0]`
+{% endnote %}
 
 ```python
 f_0d = ti.field(ti.f32, shape=())
@@ -371,17 +371,16 @@ f_0d[None] = 10.0
 f_1d = ti.field(ti.f32, shape=(1, ))
 f_1d[0] = 10.0
 ```
-{% endnote %}
 
 {% note warning %}
 Taiqi field 不支持切片，会抛出错误`Slicing is not supported on ti.field`
+{% endnote %}
 
 ```python
 f_2d[0][3:] = [4, 5, 6]  # Error! You tried to access a slice of the first row, but it is not supported
 for x in f_2d[0]:  # Error! You tried to access its first row，but it is not supported
     ...
 ```
-{% endnote %}
 
 * 使用`ti.grouped()`将多维场索引打包成向量（一般与`for`循环连用）
 
