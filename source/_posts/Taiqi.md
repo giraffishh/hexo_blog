@@ -42,7 +42,7 @@ ti.init(arch=ti.gpu)
 
 Taichi 和 Python 的语法相似，但它们并不完全相同。为了区分 Taichi 代码和原生 Python 代码，我们使用了两个装饰器，`@ti.kernel`以及`@ti.func`
 
-只有被`@ti.kernel`以及`@ti.func`修饰的才属 Taichi 的作用域，其他均为 Python 的作用域
+只有被`@ti.kernel`以及`@ti.func`修饰的才属 **Taichi 的作用域**，其他均为 **Python 作用域**
 
 + Taichi 内核`@ti.kernel`是 Taichi 运行时接管任务的入口点，它们必须由 Python 代码直接调用，不允许从另一个内核内部或从 Taichi 函数内部调用内核
 + Taichi 函数`@ti.func`是内核的构建块，只能由另一个 Taichi 函数或内核调用
@@ -71,13 +71,63 @@ print(inv_square(1.0))  # Syntax error
 ```
 
 > 可以在单个 Taichi 程序中定义多个内核。这些内核彼此独立，并按照首次调用的顺序进行编译和执行。编译后的内核会被缓存，以减少后续调用的启动开销
-> Taiqi内核和Taiqi函数在编译的时候会捕获Python作用于中的全局变量，并将其绑定作为**常量**传递至Taiqi作用域，而不会感知其值的变化
+
 
 ### 参数
 
 一个内核可以接受多个参数。但是**不能将任意 Python 对象传递给内核**。这是因为 Python 对象可以是动态的，并且可能包含 Taichi 编译器无法识别的数据
 
 内核可以接受各种参数类型，包括标量、`ti.types.matrix()` 、`ti.types.vector()` 、`ti.types.struct()`、`ti.types.ndarray()` 和 `ti.template()`.这些参数类型可以轻松地将数据从 Python 作用域传递到 Taichi 作用域。可以在`ti.types`模块中找到支持的类型
+
+Taiqi内核和Taiqi函数在编译的时候会捕获**Python作用域中的全局变量**，并将其绑定作为**常量**传递至Taiqi作用域，而不会感知其值的变化
+
+### Taiqi 内核限制
+
+* 参数需要类型提示
+
+```python
+@ti.kernel
+def my_kernel(x: int, y: float):
+    print(x + y)
+
+my_kernel(1, 1.0)  # Prints 2.0
+```
+
+* 若有返回语句，返回值要有类型提示
+* 最多一个`return`返回语句，最多一个返回值
+* 除了 CPU 和 CUDA 后端，返回值不能为结构图类型`ti.types.struct()`
+
+```python
+vec2 = ti.math.vec2
+
+@ti.kernel
+def test_sign(x: float, y: float) -> vec2:  # Return value must be type hinted
+    if x >= 0:
+        return x, y  # Compilation error: Only one return value is allowed
+    else:
+        return x  # Error: multiple return statements
+
+# 应改为
+def test_sign(x: float, y: float) -> vec2:
+    sign = vec2(0)
+    if x >= 0:
+        sign.xy = x, y
+    else:
+        sign.x = x
+    return sign
+```
+
+
+### 两者对比总结
+
+|  | Taiqi 内核| Taiqi 函数 |
+| --- | --- | --- |
+| 调用范围 | Python 作用域 | Taiqi 作用域 |
+| 参数的类型提示 | 必需 | 推荐 |
+| 返回值的类型提示| 必需 | 推荐 |
+| 参数的元素上限 | 64（OpenGL后端为32）| 无限制|
+| `return`语句上限 | 1 | 无限制 |
+|返回值数量上限 | 1 | 无限制 |
 
 ## 数据类型
 
@@ -397,7 +447,7 @@ x = ti.field(int, shape=(5, 5))
 x.fill(1)  # Sets all elements in x to 1
 ```
 
-* 访问向量field的元素的组件
+* 访问向量field的元素
 
 ```python
 vf_2d = ti.Vector.field(n=3, dtype=float, shape=(4, 4))
@@ -405,14 +455,14 @@ vf_2d[0, 0][0] = 1  # 第一行第一列的向量的第一个分量为1
 vf_2d[0, 1].xyz = 1, 2, 3
 ```
 
-* 访问矩阵field的元素的组件
+* 访问矩阵field的元素
 
 ```python
 mf_3d = ti.Matrix.field(n=3, m=2, dtype=ti.f32, shape=(300, 400, 500))
 mf_3d[3, 4][0, 1] = 1  # 第三行第四列的矩阵的第一行第二列的值为1
 ```
 
-* 访问结构体field的元素的组件
+* 访问结构体field的元素
 
 ```python
 particle_field = ti.Struct.field({
@@ -438,3 +488,5 @@ f_1d.dtype  # f32
 
 # 也可以同理访问field在声明时的其他参数
 ```
+
+
