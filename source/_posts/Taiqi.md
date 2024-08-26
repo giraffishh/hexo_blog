@@ -75,6 +75,8 @@ print(inv_square(1.0))  # Syntax error
 
 ### 参数
 
+无论是Taiqi内核还是Taiqi函数，传参的策略都是**Pass by value**
+
 一个内核可以接受多个参数。但是**不能将任意 Python 对象传递给内核**。这是因为 Python 对象可以是动态的，并且可能包含 Taichi 编译器无法识别的数据
 
 内核可以接受各种参数类型，包括标量、`ti.types.matrix()` 、`ti.types.vector()` 、`ti.types.struct()`、`ti.types.ndarray()` 和 `ti.template()`.这些参数类型可以轻松地将数据从 Python 作用域传递到 Taichi 作用域。可以在`ti.types`模块中找到支持的类型
@@ -117,6 +119,9 @@ def test_sign(x: float, y: float) -> vec2:
     return sign
 ```
 
+### Taiqi 函数限制
+
+可以在一个函数内套用其他函数，但**不能递归**（强制内联）
 
 ### 两者对比总结
 
@@ -129,9 +134,30 @@ def test_sign(x: float, y: float) -> vec2:
 | `return`语句上限 | 1 | 无限制 |
 |返回值数量上限 | 1 | 无限制 |
 
+### Taiqi 内核中的并行 For 循环
+在 Taiqi 内核中的作用域中，最外层中的 For 循环会自动并行化执行，此时无法使用`break`等语句
+
+在 Taiqi 中`+=`相当于原子操作`ti.atomic_add()`，来避免在并行执行 中出现数据征用的问题
+
+
 ## 数据类型
 
 Taichi 是一种**静态类型**编程语言，这意味着 Taichi 范围内变量的类型是在编译时确定的。这意味着一旦声明变量，就不能为其分配不同类型的值
+
+{% note warning %}
+与Python不同的是，要注意静态变量的词法作用域
+{% endnote %}
+
+```python
+@ti.kernel
+def err_out_of_scope(x: float):
+    if x < 0:
+        y = -x
+    else:
+        y = x
+    print(y)  # `y` is out of the scope
+```
+
 
 Taichi 中的`ti.types`模块定义了所有支持的数据类型。这些数据类型分为两组：**原始数据类型**和**复合数据类型**
 
@@ -488,5 +514,4 @@ f_1d.dtype  # f32
 
 # 也可以同理访问field在声明时的其他参数
 ```
-
 
