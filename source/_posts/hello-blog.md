@@ -353,7 +353,7 @@ footer:
   content: '
     <!-- PixiJS -->
     <script src="https://blog.jsdmirror.com/npm/pixi.js@7.x/dist/pixi.min.js"></script>
-    <script src="https://blog.jsdmirror.com/gh/uiureir/live2d-widget@master/autoload.js"></script>
+    <script src="https://blog.jsdmirror.com/gh/giraffishh/live2d-widget@master/autoload.js"></script>
   '
 ```
 
@@ -362,7 +362,7 @@ footer:
 
 **自定义配置：**
 
-首先将[项目](https://github.com/uiureir/live2d-widget)fork到自己github的仓库中
+首先将[项目](https://github.com/giraffishh/live2d-widget)fork到自己github的仓库中
 
 说明一下几个文件的作用：
 
@@ -383,7 +383,7 @@ footer:
 const live2d_path = "https://blog.jsdmirror.com/gh/{GitHub用户名}/live2d-widget@master/";
 ```
 
-如果要自定义模型，将[模型仓库](https://github.com/uiureir/live2d_api)fork到自己github的仓库中就可以往里面添加自己的Live2D模型了
+如果要自定义模型，将[模型仓库](https://github.com/giraffishh/live2d_api)fork到自己github的仓库中就可以往里面添加自己的Live2D模型了
 
 {% note warning %}
 注意要按照原有模型的目录结构放入新模型
