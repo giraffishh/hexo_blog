@@ -1,3 +1,11 @@
+---
+title: win11安装Docker并使用阿里云镜像
+date: 2024-11-11 14:15:05
+updated: 2024-11-11 16:29:44
+comments: true
+index_img: https://s1.imagehub.cc/images/2024/11/11/180e0a10f532121ae32a86b7c5ab0820.jpeg
+---
+
 ## 📌 安装 Docker
 
 下载安装[docker-for-windows](https://mirrors.aliyun.com/docker-toolbox/windows/docker-for-windows/?spm=a2c6h.25603864.0.0.62142767RbeKkn)（`Docker Desktop Installer.exe`和`InstallDocker.msi`都需要安装）

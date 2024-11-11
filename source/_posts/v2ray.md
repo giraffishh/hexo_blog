@@ -1,4 +1,10 @@
-#  📌 在 Linux 服务器中设置 v2ray 代理
+---
+title: 在 Linux 服务器中设置 v2ray 代理
+date: 2024-11-11 14:15:05
+updated: 2024-11-11 16:29:44
+comments: true
+index_img: https://s1.imagehub.cc/images/2024/11/11/3fe7f27999a9761146e8719ad5639b5e.png
+---
 
 > [v2ray 的手册 ](https://www.atzlinux.com/doc/v/v2ray/)
 
@@ -64,7 +70,7 @@ export https_proxy=http://127.0.0.1:10809
 export http_proxy=http://127.0.0.1:10809
 export https_proxy=http://127.0.0.1:10809
 ```
-	
+
 然后重启或执行命令`source /etc/profile`
 
 检查端口连通性
