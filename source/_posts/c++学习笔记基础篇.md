@@ -2,7 +2,7 @@
 index_img: https://s1.imagehub.cc/images/2025/01/10/e1d9469d8dfc8935c6fe11f5f91627be.png
 title: C++学习笔记基础篇
 date: 2025-01-09 00:12:56
-updated: 2025-01-13 19:06:05
+updated: 2025-01-24 14:59:38
 tags:
   - C++
 categories:
@@ -10,6 +10,7 @@ categories:
 keywords: []
 comments: true
 ---
+
 
 ## 1 C++初识
 
@@ -35,7 +36,7 @@ comments: true
 * 如果在函数内部定义，静态变量的作用域仅限于该函数，但**它的值不会在函数调用后销毁，并一直保留至下次调用**
 * 如果在函数外部定义，静态变量的作用域**仅限于定义它的文件**
 3. **初始化：**
-静态变量在初始化时只会被初始化一次，如果没有显式初始化，静态变量会被初始化为零
+静态变量在初始化时**只会被初始化一次**，如果没有显式初始化，静态变量会被初始化为零
 
 
 
@@ -631,6 +632,98 @@ int main() {
 }
 
 ```
+
+### 6.3 函数默认参数
+
+1. 如果某个位置参数有默认值，那么从这个位置开始往右都必须都要有默认值
+2. 函数声明和定义分开始，只能有一处有默认值
+
+### 6.4 函数占位参数
+
+函数的形参列表里可以有占位参数，用来做占位，调用函数时必须填补该位置
+
+**示例：**
+
+```C++
+//函数占位参数 ，占位参数也可以有默认参数
+void func(int a, int) {
+	cout << "this is func" << endl;
+}
+
+int main() {
+
+	func(10,10); //占位参数必须填补
+
+	system("pause");
+
+	return 0;
+}
+```
+
+### 6.5 函数重载
+
+在c++中函数名可以相同，来提高复用性
+
+**函数重载满足条件：**
+
+* 同一个作用域下
+* 函数名称相同
+* 函数参数类型不同 / 个数不同 / 顺序不同
+
+**示例：**
+```C++
+void func()
+{
+	cout << "func 的调用！" << endl;
+}
+void func(int a)
+{
+	cout << "func (int a) 的调用！" << endl;
+}
+void func(double a)
+{
+	cout << "func (double a)的调用！" << endl;
+}
+void func(int a ,double b)
+{
+	cout << "func (int a ,double b) 的调用！" << endl;
+}
+
+int main() {
+
+	func();			// func 的调用！
+	func(10);		// func (int a) 的调用！
+	func(3.14);		// func (double a)的调用！
+	func(10,3.14);	// func (int a ,double b) 的调用！
+
+	return 0;
+}
+```
+
+当引用作为重载条件时，可以通过`const`区分
+
+```C++
+void func(int &a)
+{
+	cout << "func (int &a) 调用 " << endl;
+}
+
+void func(const int &a)
+{
+	cout << "func (const int &a) 调用 " << endl;
+}
+
+int main() {
+	
+	int a = 10;
+	func(a);	//调用无const，此时函数里的引用绑定变量a
+	func(10);	//调用有const，此时函数里的引用绑定字面值10
+
+	return 0;
+}
+```
+
+
 
 ## 7 指针
 
