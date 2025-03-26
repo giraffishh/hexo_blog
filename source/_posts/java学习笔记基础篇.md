@@ -1,4 +1,5 @@
 ---
+index_img: https://s1.imagehub.cc/images/2025/03/26/e6c42bbb20c6388ad46d34792167971e.jpg
 title: Java学习笔记基础篇
 date: 2025-03-10 12:06:17
 updated: 2025-03-26 11:21:33
