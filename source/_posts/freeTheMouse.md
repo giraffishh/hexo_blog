@@ -1,9 +1,10 @@
 ---
 title: JETBRAINS IDE 常用快捷键
-date: 2025-02-21 9:50:05
-updated: 2025-02-11 16:29:44
 comments: true
-index_img: https://s1.imagehub.cc/images/2025/02/21/4992f16e316dab1d8dc226f3c2581239.jpg
+index_img: 'https://s1.imagehub.cc/images/2025/02/21/4992f16e316dab1d8dc226f3c2581239.jpg'
+abbrlink: bdd116cd
+date: 2025-02-21 09:50:05
+updated: 2025-02-11 16:29:44
 ---
 
 > 基于windows按键映射

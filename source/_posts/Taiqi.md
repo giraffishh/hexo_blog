@@ -1,11 +1,12 @@
 ---
-index_img: https://s1.imagehub.cc/images/2024/08/04/e558265eb0ef6d44d0a5fbd769169f78.jpg
+index_img: 'https://s1.imagehub.cc/images/2024/08/04/e558265eb0ef6d44d0a5fbd769169f78.jpg'
 title: Taiqi Lang 学习笔记 基础篇
-date: 2024-08-01 14:15:05
-updated: 2024-08-15 16:29:44
 categories:
   - 学习笔记
 comments: true
+abbrlink: 58c38333
+date: 2024-08-01 14:15:05
+updated: 2024-08-15 16:29:44
 ---
 
 ## Taiqi简介

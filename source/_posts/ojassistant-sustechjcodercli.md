@@ -1,9 +1,10 @@
 ---
-index_img: https://s1.imagehub.cc/images/2025/03/08/0d77c52de338234e8558780fdb7893eb.jpg
+index_img: 'https://s1.imagehub.cc/images/2025/03/08/0d77c52de338234e8558780fdb7893eb.jpg'
 title: OjAssistant-SustechJcoderCLI
+comments: true
+abbrlink: a9b15232
 date: 2025-03-06 11:16:31
 updated: 2025-03-26 20:49:30
-comments: true
 ---
 # OjAssistant
 🍀SustechJcoder平台助手 v1.1.2
