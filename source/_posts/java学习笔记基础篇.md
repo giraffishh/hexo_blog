@@ -9,7 +9,7 @@ categories:
 comments: true
 abbrlink: c33f2c6f
 date: 2025-03-10 12:06:17
-updated: 2025-04-02 11:33:42
+updated: 2025-04-02 17:00:11
 ---
 ## 注释
 
@@ -567,7 +567,7 @@ ArrayList适合以下场景：
 - 频繁在列表中间或开头插入/删除元素
 - 需要高效的栈、队列或双端队列操作
 
-## String类与StringBulider类
+## Java String类与StringBulider类
 
 ### String类
 
@@ -1159,9 +1159,9 @@ class SubClass extends SuperClass {
 }
 ```
 
-## Java重写(Override)与重载(Overload)
+### Java 重写(Override)与重载(Overload)
 
-### 重写(Override)
+#### 重写(Override)
 
 重写（Override）是指子类定义了一个与其父类中具有相同名称、参数列表和返回类型的方法，并且子类方法的实现覆盖了父类方法的实现
 
@@ -1203,7 +1203,7 @@ public class TestDog{
 * 重写的方法能够抛出任何**非强制异常**，无论被重写的方法是否抛出异常。但是，重写的方法不能抛出新的强制性异常，或者比被重写方法声明的更广泛的强制性异常，反之则可以
 * 构造方法不能被重写
 
-### 重载(Overload)
+#### 重载(Overload)
 
 
 
