@@ -9,7 +9,7 @@ categories:
 comments: true
 abbrlink: c33f2c6f
 date: 2025-03-10 12:06:17
-updated: 2025-04-02 17:00:11
+updated: 2025-04-07 12:00:11
 ---
 ## 注释
 
@@ -242,7 +242,7 @@ public class MathExample {
 }
 ```
 
-## Java数组、Arrays类与ArrayList
+## Java 数组、Arrays类与ArrayList
 
 ### 数组
 
@@ -772,6 +772,45 @@ public Person(String name, int age) {
     this.age = age;
 }
 ```
+
+### 静态变量与静态方法
+
+静态变量与静态方法是属于类而不是类的实例（对象），使用关键字`static`来声明。因为静态方法属于类本身，所以无需创建该类的实例就可以直接调用
+
+**静态方法特点:**
+
+* 不需要创建对象即可调用：通过类名直接调用
+* 不能访问或修改实例变量：只能访问静态变量（类变量）
+* 不能使用this或super关键字：因为静态方法与实例无关
+* 不能被重写：静态方法可以被子类隐藏（覆盖），但不能被重写
+* 不能直接调用非静态方法：在静态方法中只能直接调用其他静态方法
+
+**声明:**
+
+```java
+public class ClassName {
+    // 静态变量声明
+    private static dataType variableName = initialValue;
+    
+    // 常量（静态不可变变量）通常声明为 final
+    public static final dataType CONSTANT_NAME = value;
+    
+    // 静态方法声明
+    public static returnType methodName(parameters) {
+        // 方法体
+    }
+}
+```
+
+**调用:**
+```java
+// 访问静态变量
+ClassName.variableName;
+
+// 访问静态方法
+ClassName.methodName(arguments);
+```
+
 ### 可变参数
 
 可变参数允许程序员定义一个方法，该方法可以接受零个或多个相同类型的参数。
@@ -999,9 +1038,12 @@ class 子类 extends 父类{
 > 注意Java不支持多继承，即一个子类继承自多个父类
 > 但支持多重继承，即多个子类继承一个父类
 
-#### `extends`和`implements`关键字
+继承可以通过两种方式实现：
 
-1. `extends`关键字
+类继承（extends）：子类继承父类
+接口实现（implements）：类实现接口
+
+#### 类继承`extends`
 
 用于类与类之间的继承
 
@@ -1027,7 +1069,7 @@ public class Main {
 }
 ```
 
-2. `implements`关键字
+#### 接口实现`implements`
 
 * 用于类与接口之间的继承，从而使类实现一个接口
 * 实现类必须实现接口中声明的所有方法，除非接口有默认方法，或该类为抽象类（将重写任务交给子类）
@@ -1159,11 +1201,52 @@ class SubClass extends SuperClass {
 }
 ```
 
-### Java 重写(Override)与重载(Overload)
+### 多态
+
+多态是指同一个操作或方法可以在不同的对象上有不同的行为表现
+在Java中，多态允许一个对象在不同情况下表现出不同的形态，主要通过方法的重写（Override）和重载（Overload）来实现
+
+多态主要有两种形式：
+* 编译时多态（静态多态）：通过方法重载实现
+* 运行时多态（动态多态）：通过方法重写实现
+
+#### 重载(Overload) - 静态多态
+
+重载是在一个类里面，方法名字相同，而**参数不同**。返回类型可以相同也可以不同
+每个重载的方法（或者构造函数）都必须有一个独一无二的参数类型列表
+方法能够在同一个类中或者在一个子类中被重载
+
+> 最常用的如构造器重载
+
+**示例:**
+```Java
+public class Overloading {
+    public int test(){
+        System.out.println("test1");
+        return 1;
+    }
+ 
+    public void test(int a){
+        System.out.println("test2");
+    }   
+ 
+    //以下两个参数类型顺序不同
+    public String test(int a,String s){
+        System.out.println("test3");
+        return "returntest3";
+    }   
+ 
+    public String test(String s,int a){
+        System.out.println("test4");
+        return "returntest4";
+    }   
+}
+```
 
 #### 重写(Override)
 
 重写（Override）是指子类定义了一个与其父类中具有相同名称、参数列表和返回类型的方法，并且子类方法的实现覆盖了父类方法的实现
+运行时多态是使用继承和接口实现的，也是最常见的多态形式
 
 **示例:**
 
@@ -1183,7 +1266,7 @@ class Dog extends Animal{
 public class TestDog{
    public static void main(String args[]){
       Animal a = new Animal(); // Animal 对象
-      Dog b = new Dog(); // Dog 对象
+      Animal b = new Dog(); // Dog 对象
  
       a.move();// 执行 Animal 类的方法
  
@@ -1191,6 +1274,8 @@ public class TestDog{
    }
 }
 ```
+
+> 一般会在重写方法上面加上`@Override`注解
 
 **注意:**
 * **参数列表**与被重写方法的参数列表必须完全相同
@@ -1203,9 +1288,98 @@ public class TestDog{
 * 重写的方法能够抛出任何**非强制异常**，无论被重写的方法是否抛出异常。但是，重写的方法不能抛出新的强制性异常，或者比被重写方法声明的更广泛的强制性异常，反之则可以
 * 构造方法不能被重写
 
-#### 重载(Overload)
+#### 动态多态
 
+**动态多态**存在的三个必要条件：
+* 继承
+* 重写
+* 父类引用指向子类对象：`Parent p = new Child();`
 
+`Parent p = new Child();`可以分为三个部分：
+* `Parent p` 声明一个父类类型的引用变量
+* `new Child()` 创建一个子类的对象实例（堆内存中分配空间给Child对象）
+* `=` 将子类对象的引用赋给父类类型的变量
+
+> 引用变量p的静态类型（编译时类型）是Parent
+> 引用变量p指向的对象的动态类型（运行时类型）是Child
+
+**可以做什么:**
+1. 调用被子类重写的方法
+    * 当通过父类引用调用被子类重写的方法时，会执行子类版本的方法实现（动态方法调度）
+2. 调用父类中定义的所有方法，即使这些方法没有被子类重写
+3. 访问父类中定义的所有变量
+
+**不能做什么:**
+1. 不能直接调用子类特有的方法
+2. 不能直接调用子类特有的属性
+
+**向下转型（Downcasting）**
+
+要访问子类特有的成员，需要进行向下转型
+
+> 向下转型需要谨慎使用，应该先用`instanceof`操作符检查对象的实际类型，以避免`ClassCastException`异常。
+
+```java
+Parent p = new Child();
+
+if (p instanceof Child) {
+    Child c = (Child) p; // 向下转型
+    c.childOnly(); // 现在可以调用子类特有的方法
+}
+        
+// 使用模式匹配（Java 14+）
+if (p instanceof Child c) {
+    // 直接使用，不需要额外的转型
+   c.childOnly();
+}
+```
+
+**应用场景示例:**
+
+1. 集合类中的使用
+
+```java
+List<Animal> animals = new ArrayList<>();
+animals.add(new Dog());
+animals.add(new Cat());
+animals.add(new Bird());
+
+// 统一处理所有动物
+for (Animal animal : animals) {
+    animal.makeSound(); // 多态调用，每种动物发出不同的声音
+}
+```
+
+2. 方法参数中的使用
+
+```java
+public void feedAnimal(Animal animal) {
+    // 任何Animal子类都可以传入
+    animal.eat(); // 多态调用，不同动物有不同的进食方式
+}
+
+// 调用
+feedAnimal(new Dog());
+feedAnimal(new Cat());
+```
+
+3. 工厂模式中的使用
+
+```java
+public Shape createShape(String type) {
+    // 返回Shape的不同子类对象
+    if (type.equals("circle")) {
+        return new Circle();
+    } else if (type.equals("rectangle")) {
+        return new Rectangle();
+    }
+    return null;
+}
+
+// 使用
+Shape shape = createShape("circle");
+shape.draw(); // 多态调用，不同形状绘制不同
+```
 
 ### Java包
 
