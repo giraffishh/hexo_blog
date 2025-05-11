@@ -9,7 +9,7 @@ categories:
 comments: true
 abbrlink: c33f2c6f
 date: 2025-03-10 12:06:17
-updated: 2025-04-07 12:00:11
+updated: 2025-05-11 22:00:11
 ---
 ## 注释
 
@@ -1381,6 +1381,174 @@ Shape shape = createShape("circle");
 shape.draw(); // 多态调用，不同形状绘制不同
 ```
 
+### 抽象类
+
+在面向对象的概念中，所有的对象都是通过类来描绘的，但是反过来，并不是所有的类都是用来描绘对象的，如果一个类中没有包含足够的信息来描绘一个具体的对象，这样的类就是抽象类
+
+抽象类除了不能实例化对象之外，类的其它功能依然存在，成员变量、成员方法和构造方法的访问方式和普通类一样
+
+由于抽象类**不能实例化对象**，所以抽象类**必须被继承**，才能被使用。也是因为这个原因，通常在设计阶段决定要不要设计抽象类
+
+**示例：**
+```java
+// 抽象类
+abstract class Animal {
+    // 抽象方法（没有方法体，不给出具体如何实现）
+    public abstract void makeSound();
+
+    // 普通方法
+    public void sleep() {
+        System.out.println("Zzz...");
+    }
+}
+
+// 具体子类：狗
+class Dog extends Animal {
+    // 实现抽象方法
+    public void makeSound() {
+        System.out.println("汪汪！");
+    }
+}
+
+// 具体子类：猫
+class Cat extends Animal {
+    // 实现抽象方法
+    public void makeSound() {
+        System.out.println("喵喵！");
+    }
+}
+
+// 测试类
+public class Main {
+    public static void main(String[] args) {
+        Animal dog = new Dog();
+        Animal cat = new Cat();
+
+        dog.makeSound();  // 输出：汪汪！
+        dog.sleep();      // 输出：Zzz...
+
+        cat.makeSound();  // 输出：喵喵！
+        cat.sleep();      // 输出：Zzz...
+    }
+}
+
+```
+
+**注意：**
+*  抽象类不能被实例化，只有抽象类的非抽象子类可以创建对象
+*  抽象类中不一定包含抽象方法，但是有抽象方法的类必定是抽象类
+*  构造方法，静态的类方法（用 static 修饰的方法）不能声明为抽象方法
+* 抽象类的子类必须给出抽象类中的抽象方法的具体实现，除非该子类也是抽象类
+
+### 接口
+
+在 Java 中，接口是一种特殊的抽象类型，它定义了一组方法，但不提供实现。接口用于规定一个类必须实现哪些行为（方法），起到一种“规范”或“契约”作用
+
+```java
+interface Animal {
+    void makeSound(); // 接口方法（没有实现，默认是 public abstract 的）
+}
+
+```
+
+通过`implements`关键字来实现接口，并且必须实现接口中定义的所有方法
+
+```java
+class Dog implements Animal {
+    public void makeSound() {
+        System.out.println("汪汪！");
+    }
+}
+```
+
+Java 8 以后的接口增强：
+
+* 默认方法（default）：接口可以提供默认实现
+* 静态方法（static）：可以直接通过接口调用
+* 私有方法（Java 9 起）：接口中也可以写私有方法来给默认方法做辅助
+
+```java
+interface Animal {
+    // 默认方法：可以使用私有方法
+    default void eat() {
+        logAction("正在吃东西");
+    }
+
+
+    // 静态方法
+    static void showInfo() {
+        logStatic("这是一个动物接口");
+    }
+
+    // 普通抽象方法
+    void makeSound();
+
+    // 私有方法：只能在接口内部被默认方法或静态方法调用
+    private void logAction(String action) {
+        System.out.println("动物：" + action);
+    }
+}
+```
+
+抽象类与接口的区别[^1]：
+
+1. 语法层面上的区别
+	1) 抽象类可以提供成员方法的实现细节，而接口中只能存在public abstract 方法
+	2) 抽象类中的成员变量可以是各种类型的，而接口中的成员变量只能是public static final类型的
+	3) 接口中不能含有静态代码块以及静态方法，而抽象类可以有静态代码块和静态方法
+	4) 一个类只能继承一个抽象类，而一个类却可以实现多个接口
+
+2. 设计层面上的区别
+	1) 抽象类是对一种事物的抽象，即对类抽象，而接口是对行为的抽象。抽象类是对整个类整体进行抽象，包括属性、行为，但是接口却是对类局部（行为）进行抽象。举个简单的例子，飞机和鸟是不同类的事物，但是它们都有一个共性，就是都会飞。那么在设计的时候，可以将飞机设计为一个类 Airplane，将鸟设计为一个类 Bird，但是不能将 飞行 这个特性也设计为类，因此它只是一个行为特性，并不是对一类事物的抽象描述。此时可以将 飞行 设计为一个接口 Fly ，包含方法`fly()`，然后 Airplane 和 Bird 分别根据自己的需要实现 Fly 这个接口。然后至于有不同种类的飞机，比如战斗机、民用飞机等直接继承 Airplane 即可，对于鸟也是类似的，不同种类的鸟直接继承 Bird 类即可。从这里可以看出，继承是一个 "是不是"的关系，而 接口 实现则是 "有没有"的关系。如果一个类继承了某个抽象类，则子类必定是抽象类的种类，而接口实现则是有没有、具备不具备的关系，比如鸟是否能飞（或者是否具备飞行这个特点），能飞行则可以实现这个接口，不能飞行就不实现这个接口
+
+	2) 设计层面不同，抽象类作为很多子类的父类，它是一种模板式设计。而接口是一种行为规范，它是一种辐射式设计。什么是模板式设计？最简单例子，大家都用过 ppt 里面的模板，如果用模板 A 设计了 ppt B 和 ppt C，ppt B 和 ppt C 公共的部分就是模板 A 了，如果它们的公共部分需要改动，则只需要改动模板 A 就可以了，不需要重新对 ppt B 和 ppt C 进行改动。而辐射式设计，比如某个电梯都装了某种报警器，一旦要更新报警器，就必须全部更新。也就是说对于抽象类，如果需要添加新的方法，可以直接在抽象类中添加具体的实现，子类可以不进行变更；而对于接口则不行，如果接口进行了变更，则所有实现这个接口的类都必须进行相应的改动
+
+下面看一个网上流传最广泛的例子：门和警报的例子：门都有 `open()` 和 `close()` 两个动作，此时我们可以定义通过抽象类和接口来定义这个抽象概念：
+
+```java
+abstract class Door {
+    public abstract void open();
+    public abstract void close();
+}
+```
+或者：
+```java
+interface Door {
+    public abstract void open();
+    public abstract void close();
+}
+```
+但是现在如果我们需要门具有报警 的功能，那么该如何实现？下面提供两种思路：
+
+1. 将这三个功能都放在抽象类里面，但是这样一来所有继承于这个抽象类的子类都具备了报警功能，但是有的门并不一定具备报警功能
+
+2. 将这三个功能都放在接口里面，需要用到报警功能的类就需要实现这个接口中的 `open()` 和 `close()`，也许这个类根本就不具备 `open()` 和 `close()` 这两个功能，比如火灾报警器
+
+从这里可以看出， Door 的 `open()` 、`close()` 和 `alarm()` 根本就属于两个不同范畴内的行为，`open()` 和 `close()` 属于门本身固有的行为特性，而 `alarm()` 属于延伸的附加行为。因此最好的解决办法是单独将报警设计为一个接口，包含 `alarm()` 行为，Door 设计为单独的一个抽象类，包含 open 和 close 两种行为。再设计一个报警门继承 Door 类和实现 Alarm 接口
+
+```java
+interface Alram {
+    void alarm();
+}
+ 
+abstract class Door {
+    void open();
+    void close();
+}
+ 
+class AlarmDoor extends Door implements Alarm {
+    void oepn() {
+      //....
+    }
+    void close() {
+      //....
+    }
+    void alarm() {
+      //....
+    }
+}
+```
+
 ### Java包
 
 **源文件声明规则:**
@@ -1423,3 +1591,5 @@ import java.util.ArrayList; // 引入 java.util 包中的 ArrayList 类
 import java.util.*; // 引入 java.util 包中的所有类
 
 ```
+
+[^1]: https://www.cnblogs.com/dolphin0520/p/3811437.html

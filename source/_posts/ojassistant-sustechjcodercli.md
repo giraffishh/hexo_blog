@@ -4,10 +4,10 @@ title: OjAssistant-SustechJcoderCLI
 comments: true
 abbrlink: a9b15232
 date: 2025-03-06 11:16:31
-updated: 2025-03-26 20:49:30
+updated: 2025-05-11 20:49:30
 ---
 # OjAssistant
-🍀SustechJcoder平台助手 v1.1.2
+🍀SustechJcoder平台助手 v1.2.1
 
 ### 📌 项目结构
 ```
