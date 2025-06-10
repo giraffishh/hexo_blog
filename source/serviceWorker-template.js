@@ -42,11 +42,11 @@ const initialCacheFiles = [
 ];
 
 // 最大缓存项数量
-const MAX_CACHE_ITEMS = 250;
+const MAX_CACHE_ITEMS = 500;
 // 触发清理的阈值
-const CACHE_CLEANUP_THRESHOLD = 200;
+const CACHE_CLEANUP_THRESHOLD = 450;
 // 一次清理的比例
-const CACHE_CLEANUP_PERCENT = 0.2;
+const CACHE_CLEANUP_PERCENT = 0.1;
 
 /**
  * 安装 Service Worker
@@ -86,7 +86,8 @@ self.addEventListener("activate", event => {
 function isCacheableRequest(request) {
   try {
     const url = new URL(request.url);
-    return ['http:', 'https:'].includes(url.protocol);
+    // 只有 GET 请求且使用 http/https 协议的请求才可缓存
+    return ['http:', 'https:'].includes(url.protocol) && request.method === 'GET';
   } catch (e) {
     return false;
   }
@@ -96,9 +97,9 @@ function isCacheableRequest(request) {
  * 决定使用哪种缓存策略
  */
 function decideCachingStrategy(url, request) {
-  // 首先检查URL协议
-  if (!['http:', 'https:'].includes(url.protocol)) {
-    return null; // 不缓存非http/https协议的资源
+  // 首先检查URL协议和请求方法
+  if (!['http:', 'https:'].includes(url.protocol) || request.method !== 'GET') {
+    return null; // 不缓存非http/https协议的资源或非GET请求
   }
   
   const path = url.pathname;
@@ -133,6 +134,20 @@ function decideCachingStrategy(url, request) {
 }
 
 /**
+ * 安全地缓存响应
+ */
+async function safeCachePut(cache, request, response) {
+  // 只缓存 GET 请求的成功响应
+  if (request.method === 'GET' && response && response.ok && response.status < 400) {
+    try {
+      await cache.put(request, response);
+    } catch (error) {
+      console.log('缓存写入失败:', error.message);
+    }
+  }
+}
+
+/**
  * 缓存优先策略
  */
 async function cacheFirst(request) {
@@ -160,11 +175,7 @@ async function cacheFirst(request) {
     if (networkResponse && networkResponse.ok) {
       const responseToCache = networkResponse.clone();
       const cache = await caches.open(cacheName);
-      try {
-        await cache.put(request, responseToCache);
-      } catch (error) {
-        console.log('缓存写入失败:', error);
-      }
+      await safeCachePut(cache, request, responseToCache);
     }
     return networkResponse;
   } catch (error) {
@@ -196,11 +207,7 @@ async function networkFirst(request) {
     if (networkResponse && networkResponse.ok) {
       const responseToCache = networkResponse.clone();
       const cache = await caches.open(cacheName);
-      try {
-        await cache.put(request, responseToCache);
-      } catch (error) {
-        console.log('缓存写入失败:', error);
-      }
+      await safeCachePut(cache, request, responseToCache);
     }
     return networkResponse;
   } catch (error) {
@@ -245,11 +252,7 @@ async function staleWhileRevalidate(request) {
   const fetchPromise = fetch(request)
     .then(networkResponse => {
       if (networkResponse && networkResponse.ok) {
-        try {
-          cache.put(request, networkResponse.clone());
-        } catch (error) {
-          console.log('缓存写入失败:', error);
-        }
+        safeCachePut(cache, request, networkResponse.clone());
       }
       return networkResponse;
     })
