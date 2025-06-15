@@ -9,13 +9,13 @@ categories:
 comments: true
 abbrlink: c33f2c6f
 date: 2025-03-10 12:06:17
-updated: 2025-05-11 22:00:11
+updated: 2025-06-15 16:00:11
 ---
 ## 注释
 
 `//` `/* … */`
 
-## 8种基础数据类型
+## 8种基础数据类型（primitive data type ）
 
 * Integral types: `byte`, `short`, `int`, `long`
 * Floating-point types: `float`, `double`
@@ -28,7 +28,18 @@ updated: 2025-05-11 22:00:11
 * 成员变量(实例变量) - 默认权限`default`或声明权限`public`、`protected`、`private`
 * 静态变量(类变量) - 可以通过类名访问
 
-> `default`权限可以同包访问
+| 访问修饰符       | 同类访问 | 同包访问 | 位于其他包的子类访问 | 其他包且非子类访问 |
+| ---------------- | -------- | -------- | ---------------- | ------------------ |
+| `public`         | ✅        | ✅        | ✅                | ✅                  |
+| `protected`      | ✅        | ✅        | ✅                | ❌                  |
+| `default`（无修饰） | ✅        | ✅        | ❌                | ❌                  |
+| `private`        | ✅        | ❌        | ❌                | ❌                  |
+
+> `default`同包访问，`protected`同包+所有子类，`public`都行，`private`都不行
+
+## 运算符
+
+与c++同理，详情见[c++笔记基础篇](https://blog.giraffish.site/post/6befaffc/#3-%E8%BF%90%E7%AE%97%E7%AC%A6)
 
 ## 常用input与output
 
@@ -58,14 +69,14 @@ int num = scanner.nextInt(); // 读取返回整数，空格或Enter结束
 double number = scanner.nextDouble();  // 读取返回浮点数，空格或Enter结束
 char ch = scanner.next().charAt(0);  // 读取返回字符串，空格或Enter结束，并取字符串第一个字符
 
-scanner.close()  // 建议，关闭System.in输入流，释放内存
+scanner.close()  // 可选，关闭System.in输入流，释放内存
 ```
 
 ## 条件语句
 
 * `if … else if … else … `
 * `(a > b) ? a : b`
-* `switch … case … default … `
+* `switch … case … default … `   其中`deault`非必须
 * `｜｜`和`&&`
 > 如果`case`中没有`break`也会出现“贯穿”（fall-through）
 
@@ -582,7 +593,11 @@ String s4 = new String("Runoob");   // String 对象创建
 String s5 = new String("Runoob");   // String 对象创建
 ```
 
+> 其中 `s1==s2` `s2==s3` `s3!=s4` `s4!=s5`
+> 但是他们都`equal`（实际内容相同）
+
 **常用方法**
+
 ```java
 // 1. 字符串的创建
 String s1 = "Hello"; // 直接赋值
@@ -1025,7 +1040,7 @@ public class Puppy {
 
 ### 继承
 
-继承就是子类继承父类的特征和行为，使得子类对象实例具有父类的实例域或方法
+继承就是子类继承父类的特征和行为，使得子类对象实例**具有父类的实例域或方法**
 
 ```java
 class 父类 {
@@ -1038,10 +1053,22 @@ class 子类 extends 父类{
 > 注意Java不支持多继承，即一个子类继承自多个父类
 > 但支持多重继承，即多个子类继承一个父类
 
-继承可以通过两种方式实现：
+能够继承的东西:
+
+* 实例成员变量
+* 实例方法
+* 静态成员变量
+* 静态方法
+
+> `private`属性的和构造方法均不能被继承
+> 如果子类没有同名的静态方法，可以直接通过子类调用父类的静态方法，在多态中由引用类型决定调用谁的静态方法
+
+继承主要通过两种方式实现：
 
 类继承（extends）：子类继承父类
 接口实现（implements）：类实现接口
+
+> 接口可以extends继承接口，并支持多继承
 
 #### 类继承`extends`
 
@@ -1258,6 +1285,7 @@ class Animal{
 }
  
 class Dog extends Animal{
+   @Override
    public void move(){
       System.out.println("狗可以跑和走");
    }
@@ -1291,11 +1319,13 @@ public class TestDog{
 #### 动态多态
 
 **动态多态**存在的三个必要条件：
+
 * 继承
 * 重写
-* 父类引用指向子类对象：`Parent p = new Child();`
+* 父类引用指向子类对象：`Parent p = new Child();`即**向上转型**（Upcasting）
 
 `Parent p = new Child();`可以分为三个部分：
+
 * `Parent p` 声明一个父类类型的引用变量
 * `new Child()` 创建一个子类的对象实例（堆内存中分配空间给Child对象）
 * `=` 将子类对象的引用赋给父类类型的变量
@@ -1312,6 +1342,42 @@ public class TestDog{
 **不能做什么:**
 1. 不能直接调用子类特有的方法
 2. 不能直接调用子类特有的属性
+
+**示例:**
+
+```java
+class Vehicle {
+    public void start() {
+        System.out.println("车辆启动");
+    }
+}
+
+class Car extends Vehicle {
+    @Override
+    public void start() {
+        System.out.println("汽车启动");
+    }
+    
+    public void openTrunk() {
+        System.out.println("打开后备箱");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Vehicle vehicle = new Car();  // 向上转型
+        
+        vehicle.start();      // ✅ 可以调用，输出：汽车启动（多态）
+        // vehicle.openTrunk();  // ❌ 编译错误，父类引用看不到子类方法
+        
+        // 如果需要调用子类方法，需要向下转型
+        if (vehicle instanceof Car) {
+            Car car = (Car) vehicle;  // 向下转型
+            car.openTrunk();          // ✅ 现在可以调用了
+        }
+    }
+}
+```
 
 **向下转型（Downcasting）**
 
@@ -1435,6 +1501,7 @@ public class Main {
 ```
 
 **注意：**
+
 *  抽象类不能被实例化，只有抽象类的非抽象子类可以创建对象
 *  抽象类中不一定包含抽象方法，但是有抽象方法的类必定是抽象类
 *  构造方法，静态的类方法（用 static 修饰的方法）不能声明为抽象方法
@@ -1570,6 +1637,7 @@ package pkg1[．pkg2[．pkg3…]];
 **示例:**
 ```Java
 package net.java.util;
+
 public class Something{
    ...
 }
@@ -1590,6 +1658,115 @@ package com.example;
 import java.util.ArrayList; // 引入 java.util 包中的 ArrayList 类
 import java.util.*; // 引入 java.util 包中的所有类
 
+```
+
+## 杂鱼 ❤~
+
+### 单词术语速记
+
+| 单词术语            | 释义     | 单词术语             | 释义       |
+| :------------------ | -------- | -------------------- | ---------- |
+| explicitly declared | 显示声明 | Assignment operator  | 赋值运算符 |
+| Overload            | 重载     | Override             | 重写       |
+| invoke              | 调用     | instantiate          | 实例化     |
+| Upcasting           | 向上转型 | Downcasting          | 向下转型   |
+| static polymorphism | 静态多态 | dynamic polymorphism | 动态多态   |
+| interface           | 接口     | implement            | 实现       |
+| complier            | 编译器   |                      |            |
+
+
+
+### 值传递
+
+Java 中所有参数传递都是值传递（pass-by-value），这是 Java 的一项语言特性
+
+**示例:**
+
+* 基本类型（primitive types）：
+
+```java
+void change(int x) {
+    x = 5;
+}
+
+int a = 10;
+change(a);
+System.out.println(a);  // 输出还是 10
+```
+
+* 引用类型（reference types）：
+
+```java
+void changeName(Person p) {
+    p.name = "Alice";  // p 仍然指向0x1234，与 person 指向的是同一个对象
+}
+
+Person person = new Person();   // 假设地址是0x1234
+person.name = "Bob";
+changeName(person);  // // 传进去的是 0x1234 的一个副本
+System.out.println(person.name);  // 输出 Alice
+```
+
+```java
+void changeName(Person p) {
+    p = new Person();  // 修改了 p 指向的地址，因此不会影响外部的 person
+    p.name = "Charlie";
+}
+
+Person person = new Person();
+person.name = "Bob";
+changeName(person);
+System.out.println(person.name);  // 仍然是 Bob！
+```
+
+### `==`和`equals()`
+
+1. `==` 的作用
+
+对于基本数据类型（如int、char、boolean等），`==`比较的是它们的实际数值是否相等。
+
+对于引用类型（即对象），`==`比较的是两个对象的内存地址（引用）是否相同，也就是说是否指向同一个对象实例。
+
+**示例:**
+
+```java
+String a = "hello";
+String b = "hello";
+String c = new String("hello");
+
+System.out.println(a == b); // true，a和b指向字符串常量池中的同一个对象
+System.out.println(a == c); // false，c是new出来的新对象，地址不同
+```
+
+2. `equals() `的作用
+
+`equals()`是`Object类`中的一个方法，用于比较两个对象的内容是否相等。
+
+默认情况下（即没有重写`equals()`方法时），`equals()`的实现就是调用`==`，比较的是对象的引用地址。
+
+许多类（如String、Integer等）重写了`equals()`方法，使其比较对象的**实际内容**，而不是引用地址
+
+**示例:**
+
+```java
+String a = new String("hello");
+String b = new String("hello");
+
+System.out.println(a.equals(b)); // true，String重写了equals，比较字符串内容
+```
+
+如果自定义类没有重写`equals()`，则比较的是引用地址：
+
+```java
+class Cat {
+    String name;
+    Cat(String name) { this.name = name; }
+}
+
+Cat c1 = new Cat("Tom");
+Cat c2 = new Cat("Tom");
+
+System.out.println(c1.equals(c2)); // false，默认equals比较地址
 ```
 
 [^1]: https://www.cnblogs.com/dolphin0520/p/3811437.html
