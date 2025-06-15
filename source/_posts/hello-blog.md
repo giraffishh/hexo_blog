@@ -5,7 +5,7 @@ updated: 2024-07-21 16:29:44
 comments: true
 abbrlink: 8810fcc3
 index_img: https://s1.imagehub.cc/images/2024/07/31/2233ea3abe314e3053c55d6e33b0fb49.jpg
-sticky: 0
+sticky: ""
 ---
 ## 🍀 前言
 
@@ -341,7 +341,7 @@ live2d:
 
 #### 2. 新版本（CDN方法）
 
-> 修改自[stevenjoezhang大佬的版本](https://github.com/stevenjoezhang/live2d-widget) [^2][^4]
+> 修改自[stevenjoezhang大佬的版本](https://github.com/stevenjoezhang/live2d-widget) [^2]
 
 {% note success %}
 支持Cubism 3及以上的版本，可自定义，交互功能丰富
